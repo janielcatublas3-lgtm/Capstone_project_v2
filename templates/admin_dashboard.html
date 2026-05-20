@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | RPV Water Delivery</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 230px;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+
+            min-height: 100vh;
+
+            padding: 20px;
+        }
+
+        .sidebar p {
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .sidebar p:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: translateX(5px);
+        }
+
+        .main {
+            flex: 1;
+            padding: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #93c5fd;
+        }
+
+        input {
+            width: calc(100% - 24px);
+
+            padding: 12px;
+
+            margin: 8px 0;
+
+            border-radius: 10px;
+
+            border: none;
+
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        button {
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 10px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #3b82f6;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #60a5fa;
+        }
+
+        .income-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(150px, 1fr));
+
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            text-align: center;
+        }
+
+        .stat-box span {
+            color: #10b981;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: #93c5fd;
+        }
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            z-index: 1000;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background: #1e293b;
+
+            margin: 5% auto;
+
+            padding: 25px;
+
+            width: 85%;
+            max-width: 900px;
+
+            border-radius: 20px;
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <span>💧 RPV Water Delivery</span>
+
+        <small>Admin Dashboard</small>
+
+    </header>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <p onclick="location.href='/admin_dashboard'">
+                🏠 Dashboard
+            </p>
+
+            <p onclick="openDriverModal()">
+                👤 Add Driver
+            </p>
+
+            <!-- FIXED DELIVERY STATUS -->
+            <p onclick="location.href='/admin_status'">
+                🚚 Delivery Status
+            </p>
+
+            <p onclick="openModal()">
+                📜 History
+            </p>
+
+            <p onclick="location.href='/logout'" style="color:#fda4af;">
+                🚪 Logout
+            </p>
+
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <div style="
+            display:grid;
+            grid-template-columns:1fr 1.5fr;
+            gap:25px;
+        ">
+
+                <!-- ASSIGN DELIVERY -->
+                <div class="card">
+
+                    <h3>🚚 Assign Delivery</h3>
+
+                    <form method="POST">
+
+                        <input name="CustomerName" placeholder="Customer Name" required>
+                        <input name="location" placeholder="Delivery Address" required>
+
+                        <!-- DRIVER SELECTION (ADDED) -->
+                        <select name="driver_id" required
+                            style="width:100%; padding:12px; margin:8px 0; border-radius:10px; border:none;">
+
+                            <option value="">Select Driver</option>
+
+                            {% for d in drivers %}
+                            <option value="{{ d.id }}">{{ d.name }}</option>
+                            {% endfor %}
+
+                        </select>
+
+                        <input type="hidden" name="driver_name" id="driver_name">
+
+                        <div style="display:flex; gap:10px;">
+                            <input type="number" name="tons" placeholder="Tons" required>
+                            <input type="number" name="price" placeholder="Price/Ton" required>
+                        </div>
+
+                        <button type="submit">Submit Assignment</button>
+
+                    </form>
+
+                </div>
+
+                <script>
+                    document.querySelector("select[name='driver_id']").addEventListener("change", function () {
+                        const selected = this.options[this.selectedIndex].text;
+                        document.getElementById("driver_name").value = selected;
+                    });
+                </script>
+
+                <!-- INCOME -->
+                <div class="card">
+
+                    <h3>💰 Income Summary</h3>
+
+                    <div class="income-grid">
+
+                        <div class="stat-box">
+                            <small>Daily</small>
+                            <br>
+                            <span>₱{{ daily }}</span>
+                        </div>
+
+                        <div class="stat-box">
+                            <small>Weekly</small>
+                            <br>
+                            <span>₱{{ weekly }}</span>
+                        </div>
+
+                        <div class="stat-box">
+                            <small>Monthly</small>
+                            <br>
+                            <span>₱{{ monthly }}</span>
+                        </div>
+
+                    </div>
+
+                    <div style="
+                    margin-top:20px;
+                    padding:15px;
+                    border-radius:12px;
+                    background:rgba(16,185,129,0.1);
+                ">
+
+                        <strong>
+                            Net Profit:
+                        </strong>
+
+                        ₱{{ net_profit }}
+
+                        <br><br>
+
+                        <small>
+                            Total Income:
+                            ₱{{ total_income }}
+                        </small>
+
+                        <br>
+
+                        <small>
+                            Fuel Expenses:
+                            ₱{{ total_fuel }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- CHART -->
+            <div class="card">
+
+                <h3>📊 Profit Analytics</h3>
+
+                <div style="height:350px;">
+
+                    <canvas id="analyticsChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- HISTORY MODAL -->
+    <div id="modal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeModal()">
+                &times;
+            </span>
+
+            <h3>📜 Delivery History</h3>
+
+            <input id="search" placeholder="Search..." onkeyup="search()">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Customer</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Income</th>
+                        <th>Profit</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="table">
+
+                    {% for h in history %}
+
+                    <tr>
+
+                        <td>
+                            {{ h.get('Customer_Name', 'N/A') }}
+                        </td>
+
+                        <td>
+                            {{ h.get('location', '-') }}
+                        </td>
+
+                        <td>
+                            {{ h.get('date_assigned', '-') }}
+                        </td>
+
+                        <td>
+                            ₱{{ h.get('total_price', 0) }}
+                        </td>
+
+                        <td style="
+                        color:#10b981;
+                        font-weight:bold;
+                    ">
+                            ₱{{ h.get('profit', 0) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- DRIVER MODAL -->
+    <div id="driverModal" class="modal">
+
+        <div class="modal-content" style="max-width:400px;">
+
+            <span class="close" onclick="closeDriverModal()">
+                &times;
+            </span>
+
+            <h3>👤 Add Driver</h3>
+
+            <form method="POST" action="/add_driver">
+
+                <input name="name" placeholder="Full Name" required>
+
+                <input name="address" placeholder="Address" required>
+
+                <input name="contact" placeholder="Contact Number" required>
+
+                <button type="submit">
+                    Register Driver
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // ================= MODAL =================
+
+        function openModal() {
+            document.getElementById("modal")
+                .style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal")
+                .style.display = "none";
+        }
+
+        function openDriverModal() {
+            document.getElementById("driverModal")
+                .style.display = "block";
+        }
+
+        function closeDriverModal() {
+            document.getElementById("driverModal")
+                .style.display = "none";
+        }
+
+        // ================= SEARCH =================
+
+        function search() {
+
+            let val =
+                document.getElementById("search")
+                    .value
+                    .toLowerCase();
+
+            let rows =
+                document.querySelectorAll("#table tr");
+
+            rows.forEach(row => {
+
+                row.style.display =
+                    row.innerText.toLowerCase()
+                        .includes(val)
+                        ? ""
+                        : "none";
+            });
+        }
+
+        // ================= CLOSE MODAL =================
+
+        window.onclick = function (event) {
+
+            if (event.target.className === 'modal') {
+
+                event.target.style.display = "none";
+            }
+        }
+
+        // ================= CHART =================
+
+        const ctx =
+            document.getElementById("analyticsChart");
+
+        new Chart(ctx, {
+
+            type: "line",
+
+            data: {
+
+                labels: {{ chart_labels | tojson }},
+
+            datasets: [{
+
+                label: "Profit",
+
+                data: {{ chart_values | tojson }},
+
+            borderWidth: 3,
+
+            tension: 0.4,
+
+            fill: true,
+
+            backgroundColor:
+            "rgba(59,130,246,0.2)",
+
+            borderColor:
+            "#60a5fa",
+
+            pointBackgroundColor:
+            "#93c5fd"
+            }]
+        },
+
+            options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    labels: {
+                        color: "white"
+                    }
+                }
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+                        color: "white"
+                    },
+
+                    grid: {
+                        color:
+                            "rgba(255,255,255,0.1)"
+                    }
+                },
+
+                y: {
+
+                    ticks: {
+                        color: "white"
+                    },
+
+                    grid: {
+                        color:
+                            "rgba(255,255,255,0.1)"
+                    }
+                }
+            }
+        }
+    });
+
+    </script>
+
+</body>
+
+</html>

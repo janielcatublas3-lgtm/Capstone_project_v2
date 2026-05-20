@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard | RPV Water Delivery</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 🌊 BUBBLES ANIMATION */
+        .bubble {
+            position: absolute;
+            bottom: -150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+            filter: blur(2px);
+            animation: rise linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(-120vh) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* CONTAINER */
+        .container {
+            padding: 20px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* CARD */
+        .card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        /* TABLE WRAPPER (IMPORTANT FOR MOBILE SCROLL) */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            min-width: 700px;
+            /* prevents squishing on mobile */
+        }
+
+        th {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        /* ROUNDED ROWS */
+        tr td:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        tr td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        /* INPUTS */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 4px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
+
+        /* BUTTONS */
+        button {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .accept {
+            background: #10b981;
+            color: white;
+        }
+
+        .decline {
+            background: #ef4444;
+            color: white;
+        }
+
+        .update {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* STATUS */
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        .pending {
+            background: #f59e0b;
+        }
+
+        .accepted {
+            background: #10b981;
+        }
+
+        .done {
+            background: #6b7280;
+        }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+
+            header {
+                font-size: 1rem;
+                padding: 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 12px;
+                border-radius: 14px;
+            }
+
+            table {
+                min-width: 650px;
+                /* keeps scroll instead of breaking */
+            }
+
+            th,
+            td {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+
+        /* EXTRA SMALL PHONES (iPhone SE, etc.) */
+        @media (max-width: 480px) {
+
+            header {
+                font-size: 0.95rem;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            th,
+            td {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>💧 RPV Water Delivery</header>
+    <script>
+        /* BUBBLE GENERATOR */
+        function createBubbles() {
+            for (let i = 0; i < 20; i++) {
+                let bubble = document.createElement("div");
+                bubble.classList.add("bubble");
+                let size = Math.random() * 60 + 20;
+                bubble.style.width = size + "px";
+                bubble.style.height = size + "px";
+                bubble.style.left = Math.random() * 100 + "%";
+                bubble.style.animationDuration = (Math.random() * 8 + 5) + "s";
+                bubble.style.animationDelay = Math.random() * 5 + "s";
+                document.body.appendChild(bubble);
+            }
+        }
+        window.addEventListener("load", createBubbles);
+    </script>
+
+    <div class="container">
+        <div class="card">
+
+            <h3>📦 Driver Assignments</h3>
+
+            <div class="table-wrapper">
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Water (Tons)</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in Input_Dashboard %}
+                        <tr>
+
+                            <td>
+                                <strong>{{ item.get('Customer_Name', 'N/A') }}</strong><br>
+                                <small style="opacity:0.6;">{{ item.get('date_assigned', '-') }}</small>
+                            </td>
+
+                            <td>{{ item.get('location', '-') }}</td>
+
+                            <td>{{ item.get('water_tons', 0) }} tons</td>
+
+                            <td>₱{{ "{:,.2f}".format(item.get('total_price', 0)) }}</td>
+
+                            <td>
+                                <span class="status {{ item.get('status', 'pending') }}">
+                                    {{ item.get('status', 'pending') }}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                {% if item.get('status') == 'pending' %}
+
+                                <form action="/accept_delivery/{{ item.id }}" method="POST">
+                                    <button class="accept">Accept</button>
+                                </form>
+
+                                <form action="/decline_delivery/{{ item.id }}" method="POST">
+                                    <button class="decline">Decline</button>
+                                </form>
+
+                                {% endif %}
+
+                                {% if item.get('status') == 'accepted' %}
+                                <form action="/driver_update/{{ item.id }}" method="POST">
+
+                                    <input type="number" name="startOdo" placeholder="Start Odo" required>
+                                    <input type="number" name="endOdo" placeholder="End Odo" required>
+                                    <input type="number" name="FuelUsed" placeholder="Fuel Used" required>
+                                    <input type="number" name="FuelPrice" placeholder="Fuel Price" required>
+
+                                    <button class="update" type="submit">Finish</button>
+                                </form>
+                                {% endif %}
+
+                                {% if item.get('status') == 'done' %}
+                                <span style="color:#10b981;">✔ Completed</span>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:30px; opacity:0.5;">
+                                No active deliveries found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
