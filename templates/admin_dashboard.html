@@ -97,6 +97,18 @@
             background: rgba(255, 255, 255, 0.9);
         }
 
+        select {
+            width: 100%;
+
+            padding: 12px;
+
+            margin: 8px 0;
+
+            border-radius: 10px;
+
+            border: none;
+        }
+
         button {
             width: 100%;
 
@@ -225,19 +237,101 @@
                 👤 Add Driver
             </p>
 
-            <!-- FIXED DELIVERY STATUS -->
-            <p onclick="location.href='/admin_status'">
-                🚚 Delivery Status
+            <p onclick="openStatusModal()">
+                📋 Delivery Status
             </p>
 
-            <p onclick="openModal()">
-                📜 History
-            </p>
 
             <p onclick="location.href='/logout'" style="color:#fda4af;">
                 🚪 Logout
             </p>
+            <p onclick="openModal()">
+                📜 History
+            </p>
+            <!-- DELIVERY STATUS MODAL -->
+            <div id="statusModal" class="modal">
 
+                <div class="modal-content">
+
+                    <span class="close" onclick="closeStatusModal()">
+                        &times;
+                    </span>
+
+                    <h3>📋 Delivery Status</h3>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Driver</th>
+                                <th>Delivery Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for d in deliveries %}
+
+                            <tr>
+
+                                <td>{{ d.get('Customer_Name','-') }}</td>
+
+                                <td>{{ d.get('driver_name','-') }}</td>
+
+                                <td>{{ d.get('delivery_date','-') }}</td>
+
+                                <td>
+
+                                    {% if d.get('status') == 'Accepted' %}
+
+                                    <span style="
+                            background:#10b981;
+                            color:white;
+                            padding:6px 12px;
+                            border-radius:8px;
+                        ">
+                                        ✅ Accepted
+                                    </span>
+
+                                    {% elif d.get('status') == 'Declined' %}
+
+                                    <span style="
+                            background:#ef4444;
+                            color:white;
+                            padding:6px 12px;
+                            border-radius:8px;
+                        ">
+                                        ❌ Declined
+                                    </span>
+
+                                    {% else %}
+
+                                    <span style="
+                            background:#f59e0b;
+                            color:white;
+                            padding:6px 12px;
+                            border-radius:8px;
+                        ">
+                                        ⏳ Pending
+                                    </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
         </div>
 
         <!-- MAIN -->
@@ -257,39 +351,48 @@
                     <form method="POST">
 
                         <input name="CustomerName" placeholder="Customer Name" required>
+
                         <input name="location" placeholder="Delivery Address" required>
 
-                        <!-- DRIVER SELECTION (ADDED) -->
-                        <select name="driver_id" required
-                            style="width:100%; padding:12px; margin:8px 0; border-radius:10px; border:none;">
+                        <!-- DRIVER SELECTION -->
+                        <select name="driver_id" id="driverSelect" required>
 
-                            <option value="">Select Driver</option>
+                            <option value="">
+                                Select Driver
+                            </option>
 
                             {% for d in drivers %}
-                            <option value="{{ d.id }}">{{ d.name }}</option>
+
+                            <option value="{{ d.id }}" data-name="{{ d.name }}">
+                                {{ d.name }}
+                            </option>
+
                             {% endfor %}
 
                         </select>
 
+                        <!-- DELIVERY DATE -->
+                        <label style="color:white;">Delivery Date</label>
+                        <input type="date" name="delivery_date" required>
+
+                        <!-- DRIVER NAME -->
                         <input type="hidden" name="driver_name" id="driver_name">
 
                         <div style="display:flex; gap:10px;">
+
                             <input type="number" name="tons" placeholder="Tons" required>
+
                             <input type="number" name="price" placeholder="Price/Ton" required>
+
                         </div>
 
-                        <button type="submit">Submit Assignment</button>
+                        <button type="submit">
+                            Submit Assignment
+                        </button>
 
                     </form>
 
                 </div>
-
-                <script>
-                    document.querySelector("select[name='driver_id']").addEventListener("change", function () {
-                        const selected = this.options[this.selectedIndex].text;
-                        document.getElementById("driver_name").value = selected;
-                    });
-                </script>
 
                 <!-- INCOME -->
                 <div class="card">
@@ -388,7 +491,9 @@
                     <tr>
                         <th>Customer</th>
                         <th>Location</th>
-                        <th>Date</th>
+                        <th>Driver</th>
+                        <th>Assigned Date</th>
+                        <th>Delivery Date</th>
                         <th>Income</th>
                         <th>Profit</th>
                     </tr>
@@ -410,7 +515,15 @@
                         </td>
 
                         <td>
+                            {{ h.get('driver_name', '-') }}
+                        </td>
+
+                        <td>
                             {{ h.get('date_assigned', '-') }}
+                        </td>
+
+                        <td>
+                            {{ h.get('delivery_date', '-') }}
                         </td>
 
                         <td>
@@ -467,6 +580,19 @@
 
     <script>
 
+        // ================= DRIVER NAME =================
+
+        document
+            .getElementById("driverSelect")
+            .addEventListener("change", function () {
+
+                const selectedOption =
+                    this.options[this.selectedIndex];
+
+                document.getElementById("driver_name").value =
+                    selectedOption.getAttribute("data-name");
+            });
+
         // ================= MODAL =================
 
         function openModal() {
@@ -509,6 +635,15 @@
                         ? ""
                         : "none";
             });
+        }
+        function openStatusModal() {
+            document.getElementById("statusModal")
+                .style.display = "block";
+        }
+
+        function closeStatusModal() {
+            document.getElementById("statusModal")
+                .style.display = "none";
         }
 
         // ================= CLOSE MODAL =================

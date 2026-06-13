@@ -8,127 +8,79 @@
 
     <style>
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
             color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* 🌊 BUBBLES ANIMATION */
-        .bubble {
-            position: absolute;
-            bottom: -150px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
-            filter: blur(2px);
-            animation: rise linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes rise {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: translateY(-120vh) scale(1.3);
-                opacity: 0;
-            }
-        }
-
-        /* HEADER */
         header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
             padding: 16px;
             text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
-        /* CONTAINER */
         .container {
             padding: 20px;
             max-width: 1100px;
             margin: auto;
         }
 
-        /* CARD */
         .card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            overflow-x: auto;
+            border-radius: 15px;
         }
 
-        /* TABLE WRAPPER (IMPORTANT FOR MOBILE SCROLL) */
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* TABLE */
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 8px;
-            min-width: 700px;
-            /* prevents squishing on mobile */
+            border-spacing: 0 10px;
         }
 
         th {
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 12px;
             text-align: left;
-            white-space: nowrap;
+            font-size: 12px;
+            color: #cbd5e1;
         }
 
         td {
-            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
-            white-space: nowrap;
+            padding: 12px;
         }
 
-        /* ROUNDED ROWS */
-        tr td:first-child {
-            border-radius: 12px 0 0 12px;
+        .status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
         }
 
-        tr td:last-child {
-            border-radius: 0 12px 12px 0;
+        .pending {
+            background: #f59e0b;
         }
 
-        /* INPUTS */
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 4px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 14px;
+        .accepted {
+            background: #10b981;
         }
 
-        /* BUTTONS */
+        .declined {
+            background: #ef4444;
+        }
+
+        .done {
+            background: #3b82f6;
+        }
+
         button {
-            border: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
+            padding: 8px;
             width: 100%;
+            border: none;
+            border-radius: 8px;
             margin-top: 5px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .accept {
@@ -141,38 +93,28 @@
             color: white;
         }
 
-        .update {
+        .finish {
             background: #3b82f6;
             color: white;
         }
 
-        /* STATUS */
-        .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            display: inline-block;
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: none;
         }
 
-        .pending {
-            background: #f59e0b;
+        .topbar {
+            margin-bottom: 15px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        .accepted {
-            background: #10b981;
-        }
+        /* MOBILE RESPONSIVE */
 
-        .done {
-            background: #6b7280;
-        }
-
-        /* ================= MOBILE RESPONSIVE ================= */
         @media (max-width: 768px) {
-
-            header {
-                font-size: 1rem;
-                padding: 12px;
-            }
 
             .container {
                 padding: 10px;
@@ -180,40 +122,56 @@
 
             .card {
                 padding: 12px;
-                border-radius: 14px;
             }
 
-            table {
-                min-width: 650px;
-                /* keeps scroll instead of breaking */
-            }
-
+            table,
+            thead,
+            tbody,
             th,
-            td {
-                font-size: 12px;
+            td,
+            tr {
+                display: block;
+                width: 100%;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                background: rgba(255, 255, 255, 0.08);
+                border-radius: 12px;
+                margin-bottom: 15px;
                 padding: 10px;
             }
 
-            button {
-                font-size: 12px;
-                padding: 8px;
-            }
-        }
-
-        /* EXTRA SMALL PHONES (iPhone SE, etc.) */
-        @media (max-width: 480px) {
-
-            header {
-                font-size: 0.95rem;
-            }
-
-            table {
-                min-width: 600px;
-            }
-
-            th,
             td {
-                font-size: 11px;
+                border: none;
+                padding: 8px 5px;
+                text-align: left;
+            }
+
+            td:before {
+                font-weight: bold;
+                color: #93c5fd;
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            button {
+                padding: 14px;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+            input {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .topbar {
+                text-align: center;
+                font-size: 16px;
             }
         }
     </style>
@@ -221,112 +179,204 @@
 
 <body>
 
-    <header>💧 RPV Water Delivery</header>
-    <script>
-        /* BUBBLE GENERATOR */
-        function createBubbles() {
-            for (let i = 0; i < 20; i++) {
-                let bubble = document.createElement("div");
-                bubble.classList.add("bubble");
-                let size = Math.random() * 60 + 20;
-                bubble.style.width = size + "px";
-                bubble.style.height = size + "px";
-                bubble.style.left = Math.random() * 100 + "%";
-                bubble.style.animationDuration = (Math.random() * 8 + 5) + "s";
-                bubble.style.animationDelay = Math.random() * 5 + "s";
-                document.body.appendChild(bubble);
-            }
-        }
-        window.addEventListener("load", createBubbles);
-    </script>
+    <header>
+        💧 RPV Water Delivery - Driver Dashboard
+    </header>
+    <div style="
+position:sticky;
+top:0;
+z-index:999;
+background:#0f172a;
+padding:10px;
+display:flex;
+justify-content:space-around;
+border-bottom:1px solid rgba(255,255,255,.1);
+">
+
+        <a href="#deliveries" style="color:white;text-decoration:none;">
+            📦 Deliveries
+        </a>
+
+        <a href="#pending" style="color:white;text-decoration:none;">
+            ⏳ Pending
+        </a>
+
+        <a href="/logout" style="color:#f87171;text-decoration:none;">
+            🚪 Logout
+        </a>
+
+    </div>
 
     <div class="container">
+
         <div class="card">
 
-            <h3>📦 Driver Assignments</h3>
+            <div class="topbar">
+                <div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:15px;
+">
 
-            <div class="table-wrapper">
-                <table>
+                    <div style="
+    background:rgba(245,158,11,.2);
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    ">
+                        <small>Pending</small><br>
+                        <b>{{ Input_Dashboard|selectattr('status','equalto','pending')|list|length }}</b>
+                    </div>
 
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Location</th>
-                            <th>Water (Tons)</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                    <div style="
+    background:rgba(16,185,129,.2);
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    ">
+                        <small>Accepted</small><br>
+                        <b>{{ Input_Dashboard|selectattr('status','equalto','accepted')|list|length }}</b>
+                    </div>
 
-                    <tbody>
-                        {% for item in Input_Dashboard %}
-                        <tr>
+                    <div style="
+    background:rgba(59,130,246,.2);
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    ">
+                        <small>Completed</small><br>
+                        <b>{{ Input_Dashboard|selectattr('status','equalto','done')|list|length }}</b>
+                    </div>
 
-                            <td>
-                                <strong>{{ item.get('Customer_Name', 'N/A') }}</strong><br>
-                                <small style="opacity:0.6;">{{ item.get('date_assigned', '-') }}</small>
-                            </td>
-
-                            <td>{{ item.get('location', '-') }}</td>
-
-                            <td>{{ item.get('water_tons', 0) }} tons</td>
-
-                            <td>₱{{ "{:,.2f}".format(item.get('total_price', 0)) }}</td>
-
-                            <td>
-                                <span class="status {{ item.get('status', 'pending') }}">
-                                    {{ item.get('status', 'pending') }}
-                                </span>
-                            </td>
-
-                            <td>
-
-                                {% if item.get('status') == 'pending' %}
-
-                                <form action="/accept_delivery/{{ item.id }}" method="POST">
-                                    <button class="accept">Accept</button>
-                                </form>
-
-                                <form action="/decline_delivery/{{ item.id }}" method="POST">
-                                    <button class="decline">Decline</button>
-                                </form>
-
-                                {% endif %}
-
-                                {% if item.get('status') == 'accepted' %}
-                                <form action="/driver_update/{{ item.id }}" method="POST">
-
-                                    <input type="number" name="startOdo" placeholder="Start Odo" required>
-                                    <input type="number" name="endOdo" placeholder="End Odo" required>
-                                    <input type="number" name="FuelUsed" placeholder="Fuel Used" required>
-                                    <input type="number" name="FuelPrice" placeholder="Fuel Price" required>
-
-                                    <button class="update" type="submit">Finish</button>
-                                </form>
-                                {% endif %}
-
-                                {% if item.get('status') == 'done' %}
-                                <span style="color:#10b981;">✔ Completed</span>
-                                {% endif %}
-
-                            </td>
-                        </tr>
-
-                        {% else %}
-                        <tr>
-                            <td colspan="6" style="text-align:center; padding:30px; opacity:0.5;">
-                                No active deliveries found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
+                </div>
+                👤 Driver: <b>{{ driver_name }}</b>
             </div>
 
+            <h3>📦 My Deliveries</h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Location</th>
+                        <th>Delivery Date</th>
+                        <th>Water</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in Input_Dashboard %}
+
+                    <tr>
+
+                        <td data-label="Customer">
+                            <b>{{ item.get('Customer_Name', 'N/A') }}</b><br>
+                            <small>{{ item.get('date_assigned', '-') }}</small>
+                        </td>
+
+                        <td data-label="Location">
+                        <td>{{ item.get('location', '-') }}</td>
+
+                        <td data-label="Delivery Date">
+                            <b>{{ item.get('delivery_date', '-') }}</b>
+                        </td>
+                        <td data-label="Water">
+                        <td>{{ item.get('water_tons', 0) }} tons</td>
+
+                        <td data-label="Total">
+                        <td>₱{{ item.get('total_price', 0) }}</td>
+
+                        <td data-label="Status">
+                            <span class="status {{ item.get('status', 'pending') }}">
+                                {{ item.get('status', 'pending') }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            {% if item.get('status') == 'pending' %}
+
+                            <form action="/accept_delivery/{{ item.id }}" method="POST">
+                                <button class="accept">Accept</button>
+                            </form>
+
+                            <form action="/decline_delivery/{{ item.id }}" method="POST">
+                                <button class="decline">Decline</button>
+                            </form>
+
+                            {% elif item.get('status') == 'accepted' %}
+                            <div style="
+background:rgba(16,185,129,.15);
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+">
+                                📅 Scheduled:
+                                <b>{{ item.get('delivery_date','-') }}</b>
+                            </div>
+                            ✅ Delivery Accepted
+                            <br>
+                            <small>
+                                Scheduled Date:
+                                {{ item.get('delivery_date','-') }}
+                            </small>
         </div>
+
+        <form action="/driver_update/{{ item.id }}" method="POST">
+
+            <form action="/driver_update/{{ item.id }}" method="POST">
+
+                <input type="number" name="startOdo" placeholder="Start Odometer" required>
+                <input type="number" name="endOdo" placeholder="End Odometer" required>
+                <input type="number" name="FuelUsed" placeholder="Fuel Used" required>
+                <input type="number" name="FuelPrice" placeholder="Fuel Price" required>
+
+                <button class="finish" type="submit">
+                    Finish Delivery
+                </button>
+
+            </form>
+
+            {% elif item.get('status') == 'done' %}
+
+            <div style="color:#10b981;font-weight:bold;">
+                ✔ Delivery Completed
+            </div>
+
+            {% elif item.get('status') == 'declined' %}
+
+            <div style="color:#ef4444;font-weight:bold;">
+                ❌ Delivery Declined
+            </div>
+
+            {% endif %}
+
+            </td>
+
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="6" style="text-align:center; opacity:0.6; padding:30px;">
+                    No deliveries assigned yet.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+            </table>
+
+    </div>
+
     </div>
 
 </body>

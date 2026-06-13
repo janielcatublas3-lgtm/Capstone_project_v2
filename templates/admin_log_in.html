@@ -9,6 +9,7 @@
     <title>Water Station Admin</title>
 
     <style>
+        /* 🌌 BACKGROUND */
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
@@ -17,7 +18,7 @@
             background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
         }
 
-        /* Animated background */
+        /* ✨ ANIMATED GRADIENT OVERLAY */
         body::before {
             content: "";
             position: absolute;
@@ -42,7 +43,7 @@
             }
         }
 
-        /* bubbles */
+        /* 🌊 ADVANCED BUBBLES */
         .bubble {
             position: absolute;
             bottom: -120px;
@@ -56,7 +57,7 @@
 
         @keyframes rise {
             0% {
-                transform: translateY(0) scale(1);
+                transform: translateY(0) translateX(0) scale(1);
                 opacity: 0;
             }
 
@@ -70,7 +71,7 @@
             }
         }
 
-        /* login card */
+        /* 💎 GLASS CARD */
         .login-container {
             position: relative;
             z-index: 2;
@@ -80,25 +81,25 @@
             backdrop-filter: blur(20px);
             background: rgba(255, 255, 255, 0.12);
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            color: #1e293b;
             text-align: center;
+
             margin: auto;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-50%) scale(0.9);
+
             animation: popIn 1s ease forwards;
         }
 
         @keyframes popIn {
-            from {
-                transform: translateY(-50%) scale(0.9);
-            }
-
             to {
                 transform: translateY(-50%) scale(1);
             }
         }
 
+        /* TITLE */
         h2 {
-            color: white;
+            color: #ffffff;
             margin-bottom: 5px;
         }
 
@@ -108,16 +109,38 @@
             color: #cbd5e1;
         }
 
-        .error {
-            color: #f87171;
-            display: none;
+        /* INPUT */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        .success {
-            color: #4ade80;
-            display: none;
+        /* BUTTON */
+        button {
+            width: 250px;
+            margin: 15px auto;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
+        button:hover {
+            transform: scale(1.05);
+            background: #93c5fd;
+            color: #1e293b;
+        }
+
+        /* LOADING SPINNER */
         .spinner {
             width: 20px;
             height: 20px;
@@ -135,6 +158,18 @@
             }
         }
 
+        /* MESSAGES */
+        .error {
+            color: #f87171;
+            display: none;
+        }
+
+        .success {
+            color: #4ade80;
+            display: none;
+        }
+
+        /* GOOGLE BUTTON */
         #googleSignIn {
             display: flex;
             justify-content: center;
@@ -145,7 +180,7 @@
 
 <body>
 
-    <!-- bubbles -->
+    <!-- 🌊 BUBBLES -->
     <script>
         function createBubbles() {
             for (let i = 0; i < 30; i++) {
@@ -153,9 +188,11 @@
                 bubble.classList.add("bubble");
 
                 let size = Math.random() * 60 + 10;
+
                 bubble.style.width = size + "px";
                 bubble.style.height = size + "px";
                 bubble.style.left = Math.random() * 100 + "%";
+
                 bubble.style.animationDuration = (Math.random() * 6 + 4) + "s";
                 bubble.style.animationDelay = Math.random() * 5 + "s";
 
@@ -163,8 +200,18 @@
             }
         }
 
-        window.addEventListener("load", () => {
+        window.addEventListener("load", function () {
             createBubbles();
+
+            google.accounts.id.initialize({
+                client_id: "YOUR_GOOGLE_CLIENT_ID",
+                callback: handleCredentialResponse
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById("googleSignIn"),
+                { theme: "outline", size: "large", width: 250 }
+            );
         });
     </script>
 
@@ -177,13 +224,17 @@
         <div id="googleSignIn"></div>
 
         <div class="spinner" id="loading"></div>
+
         <div class="error" id="error">Invalid login</div>
         <div class="success" id="success">Access granted!</div>
 
     </div>
 
     <script>
+
+        // --------------------------
         // GOOGLE LOGIN CALLBACK
+        // --------------------------
         function handleCredentialResponse(response) {
             const form = document.createElement("form");
             form.method = "POST";
@@ -199,7 +250,9 @@
             form.submit();
         }
 
-        // INIT GOOGLE LOGIN
+        // --------------------------
+        // INITIALIZE GOOGLE BUTTON
+        // --------------------------
         window.onload = function () {
             google.accounts.id.initialize({
                 client_id: "737562037990-n21m7uc217rhihqs83r5j5hene4b2jf6.apps.googleusercontent.com",
