@@ -2,58 +2,276 @@
 <html>
 
 <head>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Login</title>
+
+    <title>Driver Login | RPV Water Delivery</title>
+
 
     <style>
-        body {
-            margin: 0;
-            font-family: Segoe UI;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
         }
+
+
+        body {
+
+            margin: 0;
+
+            height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            background:
+                linear-gradient(135deg,
+                    #0f172a,
+                    #1e3a8a);
+
+            color: white;
+
+        }
+
+
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+
             width: 90%;
-            max-width: 350px;
+
+            max-width: 380px;
+
+            padding: 30px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
             backdrop-filter: blur(15px);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.3);
+
+            text-align: center;
+
         }
 
-        input,
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 10px;
-        }
 
-        button {
-            background: #10b981;
-            color: white;
+
+        .logo {
+
+            font-size: 26px;
+
             font-weight: bold;
+
+            color: #60a5fa;
+
+            margin-bottom: 10px;
+
+        }
+
+
+
+        h2 {
+
+            margin-bottom: 20px;
+
+        }
+
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 12px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+        }
+
+
+
+        .password-box {
+
+            position: relative;
+
+        }
+
+
+
+        .password-box span {
+
+            position: absolute;
+
+            right: 15px;
+
+            top: 25px;
+
+            cursor: pointer;
+
+            color: #334155;
+
+        }
+
+
+
+        button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 20px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #10b981;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+
+        button:hover {
+
+            background: #059669;
+
+        }
+
+
+
+        .info {
+
+            margin-top: 20px;
+
+            font-size: 14px;
+
+            color: #cbd5e1;
+
+            line-height: 1.5;
+
         }
     </style>
+
+
 </head>
+
+
 
 <body>
 
-    <div class="card">
-        <h2>🚚 Driver Login</h2>
 
-        <form method="POST" action="/driver_login">
-            <input name="code" placeholder="Enter Driver Code" required>
-            <button type="submit">Login</button>
+    <div class="card">
+
+
+        <div class="logo">
+            RPV Water Delivery
+        </div>
+
+
+        <h2>
+            🚚 Driver Login
+        </h2>
+
+
+
+        <form action="/driver_login" method="POST">
+
+
+            <input type="text" name="username" placeholder="Username" required>
+
+
+
+            <div class="password-box">
+
+                <input id="password" type="password" name="password" placeholder="Password" required>
+
+
+                <span onclick="showPassword()">
+                    👁
+                </span>
+
+
+            </div>
+
+
+
+            <button type="submit">
+
+                Login
+
+            </button>
+
+
         </form>
 
+
+
+        <div class="info">
+
+            First time using the system?
+
+            <br>
+
+            Scan the QR Code provided by the administrator
+
+            <br>
+
+            to register your driver account.
+
+        </div>
+
+
+
     </div>
+
+
+
+    <script>
+
+        function showPassword() {
+
+            let pass =
+                document.getElementById("password");
+
+
+            if (pass.type === "password") {
+
+                pass.type = "text";
+
+            }
+
+            else {
+
+                pass.type = "password";
+
+            }
+
+        }
+
+    </script>
+
+
 
 </body>
 

@@ -657,86 +657,54 @@
         }
 
         // ================= CHART =================
-
-        const ctx =
-            document.getElementById("analyticsChart");
+        const ctx = document.getElementById("analyticsChart").getContext("2d");
 
         new Chart(ctx, {
-
             type: "line",
-
             data: {
-
                 labels: {{ chart_labels | tojson }},
-
             datasets: [{
-
                 label: "Profit",
-
                 data: {{ chart_values | tojson }},
-
             borderWidth: 3,
-
             tension: 0.4,
-
             fill: true,
-
-            backgroundColor:
-            "rgba(59,130,246,0.2)",
-
-            borderColor:
-            "#60a5fa",
-
-            pointBackgroundColor:
-            "#93c5fd"
-            }]
-        },
-
+            backgroundColor: "rgba(59,130,246,0.2)",
+            borderColor: "#60a5fa",
+            pointBackgroundColor: "#93c5fd"
+        }]
+    },
             options: {
-
             responsive: true,
-
             plugins: {
-
                 legend: {
-
                     labels: {
                         color: "white"
                     }
                 }
             },
-
             scales: {
-
                 x: {
-
                     ticks: {
                         color: "white"
                     },
-
                     grid: {
-                        color:
-                            "rgba(255,255,255,0.1)"
+                        color: "rgba(255,255,255,0.1)"
                     }
                 },
-
                 y: {
-
+                    beginAtZero: true,
                     ticks: {
                         color: "white"
                     },
-
                     grid: {
-                        color:
-                            "rgba(255,255,255,0.1)"
+                        color: "rgba(255,255,255,0.1)"
                     }
                 }
             }
         }
-    });
-
+});
     </script>
-
 </body>
 
 </html>

@@ -13,6 +13,7 @@ from io import BytesIO
 import webbrowser
 from threading import Timer
 import socket
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # ================= FIREBASE =================
 cred = credentials.Certificate("serviceAccountKey.json")
@@ -205,7 +206,7 @@ def admin_dashboard():
 def add_driver():
 
     driver_id = str(uuid.uuid4())
-    qr_url = f"http://{local_ip}:5000/driver_qr_login/{driver_id}"
+    qr_url = f"http://{local_ip}:5000/register/{driver_id}"
 
     qr = qrcode.make(qr_url)
     buffer = BytesIO()
@@ -214,13 +215,18 @@ def add_driver():
     qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
     db.collection("drivers").document(driver_id).set({
-        "name": request.form.get("name"),
-        "address": request.form.get("address"),
-        "contact": request.form.get("contact"),
-        "qr_url": qr_url,
-        "qr_image": qr_base64,
-        "created_at": datetime.now(timezone.utc)
-    })
+    "name": request.form.get("name"),
+    "address": request.form.get("address"),
+    "contact": request.form.get("contact"),
+
+    "registered": False,
+    "username": "",
+    "password": "",
+
+    "qr_url": qr_url,
+    "qr_image": qr_base64,
+    "created_at": datetime.now(timezone.utc)
+})
 
     return f"""
     <h2>Driver Created</h2>
@@ -228,50 +234,84 @@ def add_driver():
     <br><a href="/admin_dashboard">Back</a>
     """
 
+
+# ================= DRIVER REGISTER =================
+@app.route("/register/<driver_id>", methods=["GET", "POST"])
+def register(driver_id):
+
+    driver_ref = db.collection("drivers").document(driver_id)
+    driver = driver_ref.get()
+
+    if not driver.exists:
+        return "Invalid QR Code", 404
+
+    data = driver.to_dict()
+
+    if request.method == "GET":
+
+        if data.get("registered"):
+            return redirect("/driver_login")
+
+        return render_template(
+            "register.html",
+            driver_name=data.get("name"),
+            driver_id=driver_id
+        )
+
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "").strip()
+    confirm = request.form.get("confirm_password", "").strip()
+
+    if password != confirm:
+        return "Passwords do not match."
+
+    # Check if username already exists
+    drivers = db.collection("drivers").stream()
+
+    for d in drivers:
+        info = d.to_dict()
+        if info.get("username") == username:
+            return "Username already exists."
+
+    driver_ref.update({
+        "username": username,
+        "password": generate_password_hash(password),
+        "registered": True
+    })
+
+    return redirect("/driver_login")
+
+
 # ================= DRIVER LOGIN =================
-@app.route("/driver_qr_login/<driver_id>")
-def driver_qr_login(driver_id):
-
-    driver = db.collection("drivers").document(driver_id).get()
-
-    if not driver.exists:
-        return "Invalid QR", 400
-
-    data = driver.to_dict()
-
-    session.clear()
-    session["driver_id"] = driver_id
-    session["driver_name"] = data.get("name")
-
-    return redirect("/driver")
-
-# ================= DRIVER LOGIN PAGE (FIX ADDED) =================
-@app.route("/driver_login")
+@app.route("/driver_login", methods=["GET", "POST"])
 def driver_login():
-    return """
-    <h2>Driver Login</h2>
-    <form action="/driver_manual_login" method="POST">
-        <input name="driver_id" placeholder="Driver ID">
-        <button type="submit">Login</button>
-    </form>
-    """
 
-@app.route("/driver_manual_login", methods=["POST"])
-def driver_manual_login():
+    if request.method == "GET":
+        return render_template("driver_login.html")
 
-    driver_id = request.form.get("driver_id")
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "").strip()
 
-    driver = db.collection("drivers").document(driver_id).get()
+    drivers = db.collection("drivers").where("username","==",username).stream()
 
-    if not driver.exists:
-        return "Invalid Driver ID"
+    for doc in drivers:
 
-    data = driver.to_dict()
+        data = doc.to_dict()
 
-    session["driver_id"] = driver_id
-    session["driver_name"] = data.get("name")
+        if data.get("username") == username:
 
-    return redirect("/driver")
+            if check_password_hash(data.get("password"), password):
+
+                session.clear()
+
+                session["driver_id"] = doc.id
+                session["driver_name"] = data.get("name")
+
+                return redirect("/driver")
+
+            return "Incorrect password."
+
+    return "Username not found."
 
 # ================= DRIVER PAGE =================
 @app.route("/driver")
@@ -363,7 +403,17 @@ def logout():
     session.clear()
     return redirect("/")
 
+
+# ================= DRIVER LOGOUT =================
+@app.route("/driver_logout")
+def driver_logout():
+
+    session.clear()
+
+    return redirect("/driver_login")
+
+
 # ================= RUN =================
 if __name__ == "__main__":
     Timer(1, lambda: webbrowser.open("http://127.0.0.1:5000/")).start()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
