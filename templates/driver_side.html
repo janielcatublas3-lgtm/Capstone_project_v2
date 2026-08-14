@@ -3,125 +3,433 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Driver Dashboard | RPV Water Delivery</title>
 
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            color: #1e293b;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         header {
-            padding: 16px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: #0f172a;
+            color: #fff;
+            padding: 16px 24px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .12);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1300px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 25px;
+        }
+
+        .brand-text {
+            white-space: nowrap;
+        }
+
+        .top-nav {
+            position: sticky;
+            top: 65px;
+            z-index: 999;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+        }
+
+        .nav-inner {
+            max-width: 1300px;
+            margin: auto;
+            min-height: 48px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .logout {
+            color: #dc2626;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .logout:hover {
+            background: #fee2e2;
         }
 
         .container {
-            padding: 20px;
-            max-width: 1100px;
+            width: 100%;
+            max-width: 1300px;
             margin: auto;
+            padding: 24px 20px 40px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, .07);
+            border: 1px solid #e5e7eb;
+        }
+
+        .dashboard-card {
+            width: 100%;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #475569;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .driver-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .driver-info small {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .driver-info b {
+            color: #0f172a;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-card.pending {
+            background: #fff7ed;
+            border-color: #fed7aa;
+        }
+
+        .stat-card.accepted {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+        }
+
+        .stat-card.completed {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .stat-label {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 25px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+        }
+
+        .delivery-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
+            border-collapse: collapse;
         }
 
-        th {
+        thead {
+            background: #1e3a8a;
+        }
+
+        thead th {
+            color: #ffffff;
+            padding: 14px;
+            font-size: 13px;
             text-align: left;
-            font-size: 12px;
-            color: #cbd5e1;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-        td {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
+        tbody td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+        .customer-name {
+            font-weight: 700;
+            color: #0f172a;
+            display: block;
+        }
+
+        .assigned-date {
+            display: block;
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .location {
+            max-width: 230px;
+            line-height: 1.4;
         }
 
         .status {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: .4px;
+            white-space: nowrap;
         }
 
         .pending {
-            background: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .accepted {
-            background: #10b981;
-        }
-
-        .declined {
-            background: #ef4444;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .done {
-            background: #3b82f6;
+            background: #dbeafe;
+            color: #1d4ed8;
         }
 
-        button {
-            padding: 8px;
-            width: 100%;
-            border: none;
-            border-radius: 8px;
-            margin-top: 5px;
-            cursor: pointer;
-            font-weight: bold;
+        .declined {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        .accept {
-            background: #10b981;
-            color: white;
+        .action-cell {
+            min-width: 170px;
         }
 
-        .decline {
-            background: #ef4444;
-            color: white;
+        form {
+            margin: 0;
         }
 
-        .finish {
-            background: #3b82f6;
-            color: white;
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
         }
 
         input {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: none;
-        }
-
-        .topbar {
-            margin-bottom: 15px;
+            padding: 12px 13px;
+            margin-top: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            outline: none;
             font-size: 14px;
-            opacity: 0.9;
+            transition: .2s;
+            background: #fff;
+            color: #0f172a;
         }
 
-        /* MOBILE RESPONSIVE */
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+        }
 
-        @media (max-width: 768px) {
+        input::placeholder {
+            color: #94a3b8;
+        }
 
+        button {
+            width: 100%;
+            min-height: 44px;
+            padding: 11px 14px;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: .2s;
+            touch-action: manipulation;
+        }
+
+        button:active {
+            transform: scale(.98);
+        }
+
+        .accept {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .accept:hover {
+            background: #15803d;
+        }
+
+        .decline {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .decline:hover {
+            background: #b91c1c;
+        }
+
+        .finish {
+            background: #2563eb;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .finish:hover {
+            background: #1d4ed8;
+        }
+
+        .scheduled-box {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #166534;
+            padding: 11px;
+            border-radius: 9px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .accepted-message {
+            background: #f0fdf4;
+            color: #166534;
+            border-radius: 9px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .completed-message {
+            color: #16a34a;
+            font-weight: 700;
+            padding: 8px 0;
+        }
+
+        .declined-message {
+            color: #dc2626;
+            font-weight: 700;
+            padding: 8px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 45px 20px !important;
+            color: #64748b;
+        }
+
+        .mobile-summary {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
             .container {
-                padding: 10px;
+                padding: 18px 14px 35px;
             }
 
             .card {
-                padding: 12px;
+                padding: 18px;
+                border-radius: 14px;
+            }
+
+            .delivery-table-wrapper {
+                overflow: visible;
             }
 
             table,
@@ -138,40 +446,223 @@
                 display: none;
             }
 
-            tr {
-                background: rgba(255, 255, 255, 0.08);
-                border-radius: 12px;
-                margin-bottom: 15px;
-                padding: 10px;
+            tbody tr {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                margin-bottom: 16px;
+                overflow: hidden;
+                box-shadow: 0 4px 14px rgba(15, 23, 42, .06);
             }
 
-            td {
-                border: none;
-                padding: 8px 5px;
-                text-align: left;
+            tbody td {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 15px;
+                padding: 12px 14px;
+                border-bottom: 1px solid #f1f5f9;
+                min-height: 48px;
             }
 
-            td:before {
-                font-weight: bold;
-                color: #93c5fd;
+            tbody td:last-child {
+                border-bottom: none;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                font-size: 12px;
+                font-weight: 700;
+                color: #64748b;
+                min-width: 85px;
+                flex-shrink: 0;
+                padding-top: 2px;
+            }
+
+            .customer-name {
+                font-size: 15px;
+            }
+
+            .assigned-date {
+                font-size: 10px;
+            }
+
+            .location {
+                max-width: none;
+                text-align: right;
+            }
+
+            .action-cell {
                 display: block;
-                margin-bottom: 3px;
+                padding: 15px;
+                background: #f8fafc;
+            }
+
+            .action-cell::before {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .action-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .action-buttons form {
+                width: 100%;
+            }
+
+            .finish-form {
+                width: 100%;
+            }
+
+            .mobile-summary {
+                display: block;
+                background: #f8fafc;
+                border-radius: 10px;
+                padding: 12px;
+                margin-bottom: 12px;
+                color: #475569;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 13px 15px;
+                font-size: 18px;
+            }
+
+            .header-content {
+                justify-content: center;
+            }
+
+            .brand-icon {
+                font-size: 21px;
+            }
+
+            .top-nav {
+                top: 52px;
+            }
+
+            .nav-inner {
+                min-height: 42px;
+                padding: 5px 12px;
+            }
+
+            .logout {
+                font-size: 13px;
+                padding: 7px 11px;
+            }
+
+            .container {
+                padding: 12px 10px 30px;
+            }
+
+            .card {
+                padding: 14px;
+                border-radius: 12px;
+            }
+
+            .driver-info {
+                margin-bottom: 15px;
+                padding-bottom: 14px;
+            }
+
+            .driver-avatar {
+                width: 38px;
+                height: 38px;
+            }
+
+            .driver-info b {
+                font-size: 14px;
+            }
+
+            .stats-grid {
+                gap: 7px;
+                margin-bottom: 22px;
+            }
+
+            .stat-card {
+                padding: 11px 5px;
+                border-radius: 9px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .stat-number {
+                font-size: 21px;
+            }
+
+            h2 {
+                font-size: 19px;
+            }
+
+            .section-title {
+                margin-bottom: 13px;
+            }
+
+            tbody td {
+                padding: 11px 12px;
+                font-size: 13px;
+            }
+
+            tbody td::before {
+                min-width: 72px;
+                font-size: 11px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
             }
 
             button {
-                padding: 14px;
-                font-size: 15px;
-                font-weight: bold;
+                min-height: 46px;
+                font-size: 14px;
             }
 
             input {
-                padding: 12px;
-                font-size: 15px;
+                min-height: 46px;
+                font-size: 16px;
             }
 
-            .topbar {
-                text-align: center;
+            .scheduled-box,
+            .accepted-message {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-text {
                 font-size: 16px;
+            }
+
+            .container {
+                padding-left: 7px;
+                padding-right: 7px;
+            }
+
+            .card {
+                padding: 11px;
+            }
+
+            .stats-grid {
+                gap: 5px;
+            }
+
+            .stat-card {
+                padding: 9px 3px;
+            }
+
+            .stat-number {
+                font-size: 19px;
+            }
+
+            tbody td::before {
+                min-width: 65px;
             }
         }
     </style>
@@ -180,204 +671,218 @@
 <body>
 
     <header>
-        💧 RPV Water Delivery - Driver Dashboard
+        <div class="header-content">
+            <div class="brand">
+                <span class="brand-icon">💧</span>
+                <span class="brand-text">RPV Water Delivery</span>
+            </div>
+        </div>
     </header>
-    <div style="
-position:sticky;
-top:0;
-z-index:999;
-background:#0f172a;
-padding:10px;
-display:flex;
-justify-content:space-around;
-border-bottom:1px solid rgba(255,255,255,.1);
-">
 
-        <a href="#deliveries" style="color:white;text-decoration:none;">
-            📦 Deliveries
-        </a>
-
-        <a href="#pending" style="color:white;text-decoration:none;">
-            ⏳ Pending
-        </a>
-
-        <a href="{{ url_for('driver_logout') }}" style="color:#f87171;text-decoration:none;">
-            🚪 Logout
-        </a>
-
+    <div class="top-nav">
+        <div class="nav-inner">
+            <a href="{{ url_for('driver_logout') }}" class="logout">
+                🚪 Logout
+            </a>
+        </div>
     </div>
 
-    <div class="container">
+    <main class="container">
 
-        <div class="card">
+        <div class="card dashboard-card">
 
-            <div class="topbar">
-                <div style="
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-bottom:15px;
-">
-
-                    <div style="
-    background:rgba(245,158,11,.2);
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    ">
-                        <small>Pending</small><br>
-                        <b>{{ Input_Dashboard|selectattr('status','equalto','pending')|list|length }}</b>
-                    </div>
-
-                    <div style="
-    background:rgba(16,185,129,.2);
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    ">
-                        <small>Accepted</small><br>
-                        <b>{{ Input_Dashboard|selectattr('status','equalto','accepted')|list|length }}</b>
-                    </div>
-
-                    <div style="
-    background:rgba(59,130,246,.2);
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    ">
-                        <small>Completed</small><br>
-                        <b>{{ Input_Dashboard|selectattr('status','equalto','done')|list|length }}</b>
-                    </div>
-
+            <div class="driver-info">
+                <div class="driver-avatar">
+                    {{ driver_name[0]|upper if driver_name else 'D' }}
                 </div>
-                👤 Driver: <b>{{ driver_name }}</b>
+
+                <div>
+                    <small>Logged in as Driver</small>
+                    <b>{{ driver_name }}</b>
+                </div>
             </div>
 
-            <h3>📦 My Deliveries</h3>
+            <div class="stats-grid">
 
-            <table>
+                <div class="stat-card pending">
+                    <span class="stat-label">Pending</span>
+                    <span class="stat-number">
+                        {{ Input_Dashboard|selectattr('status','equalto','pending')|list|length }}
+                    </span>
+                </div>
 
-                <thead>
-                    <tr>
-                        <th>Customer</th>
-                        <th>Location</th>
-                        <th>Delivery Date</th>
-                        <th>Water</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+                <div class="stat-card accepted">
+                    <span class="stat-label">Accepted</span>
+                    <span class="stat-number">
+                        {{ Input_Dashboard|selectattr('status','equalto','accepted')|list|length }}
+                    </span>
+                </div>
 
-                <tbody>
+                <div class="stat-card completed">
+                    <span class="stat-label">Completed</span>
+                    <span class="stat-number">
+                        {{ Input_Dashboard|selectattr('status','equalto','done')|list|length }}
+                    </span>
+                </div>
 
-                    {% for item in Input_Dashboard %}
+            </div>
 
-                    <tr>
+            <div class="section-title">
+                <h2>📦 My Deliveries</h2>
+            </div>
 
-                        <td data-label="Customer">
-                            <b>{{ item.get('Customer_Name', 'N/A') }}</b><br>
-                            <small>{{ item.get('date_assigned', '-') }}</small>
-                        </td>
+            <div class="mobile-summary">
+                Manage your assigned deliveries below. Accept a delivery to enter the trip details.
+            </div>
 
-                        <td data-label="Location">
-                        <td>{{ item.get('location', '-') }}</td>
+            <div class="delivery-table-wrapper">
 
-                        <td data-label="Delivery Date">
-                            <b>{{ item.get('delivery_date', '-') }}</b>
-                        </td>
-                        <td data-label="Water">
-                        <td>{{ item.get('water_tons', 0) }} tons</td>
+                <table>
 
-                        <td data-label="Total">
-                        <td>₱{{ item.get('total_price', 0) }}</td>
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Delivery Date</th>
+                            <th>Water</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                        <td data-label="Status">
-                            <span class="status {{ item.get('status', 'pending') }}">
-                                {{ item.get('status', 'pending') }}
-                            </span>
-                        </td>
+                    <tbody>
 
-                        <td>
+                        {% for item in Input_Dashboard %}
 
-                            {% if item.get('status') == 'pending' %}
+                        <tr>
 
-                            <form action="/accept_delivery/{{ item.id }}" method="POST">
-                                <button class="accept">Accept</button>
-                            </form>
+                            <td data-label="Customer">
+                                <div>
+                                    <span class="customer-name">
+                                        {{ item.get('Customer_Name', 'N/A') }}
+                                    </span>
 
-                            <form action="/decline_delivery/{{ item.id }}" method="POST">
-                                <button class="decline">Decline</button>
-                            </form>
+                                    <span class="assigned-date">
+                                        Assigned:
+                                        {{ item.get('date_assigned', '-') }}
+                                    </span>
+                                </div>
+                            </td>
 
-                            {% elif item.get('status') == 'accepted' %}
-                            <div style="
-background:rgba(16,185,129,.15);
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
-">
-                                📅 Scheduled:
-                                <b>{{ item.get('delivery_date','-') }}</b>
-                            </div>
-                            ✅ Delivery Accepted
-                            <br>
-                            <small>
-                                Scheduled Date:
-                                {{ item.get('delivery_date','-') }}
-                            </small>
+                            <td data-label="Location">
+                                <div class="location">
+                                    {{ item.get('location', '-') }}
+                                </div>
+                            </td>
+
+                            <td data-label="Delivery Date">
+                                <b>{{ item.get('delivery_date', '-') }}</b>
+                            </td>
+
+                            <td data-label="Water">
+                                {{ item.get('water_tons', 0) }} tons
+                            </td>
+
+                            <td data-label="Total">
+                                <b>₱{{ item.get('total_price', 0) }}</b>
+                            </td>
+
+                            <td data-label="Status">
+                                <span class="status {{ item.get('status', 'pending') }}">
+                                    {{ item.get('status', 'pending') }}
+                                </span>
+                            </td>
+
+                            <td data-label="Action" class="action-cell">
+
+                                {% if item.get('status') == 'pending' %}
+
+                                <div class="action-buttons">
+
+                                    <form action="/accept_delivery/{{ item.id }}" method="POST">
+                                        <button class="accept" type="submit">
+                                            ✓ Accept
+                                        </button>
+                                    </form>
+
+                                    <form action="/decline_delivery/{{ item.id }}" method="POST">
+                                        <button class="decline" type="submit">
+                                            ✕ Decline
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                                {% elif item.get('status') == 'accepted' %}
+
+                                <div class="scheduled-box">
+                                    📅 Scheduled:
+                                    <b>{{ item.get('delivery_date', '-') }}</b>
+                                </div>
+
+                                <div class="accepted-message">
+                                    ✅ Delivery Accepted
+                                </div>
+
+                                <form class="finish-form" action="/driver_update/{{ item.id }}" method="POST">
+
+                                    <input type="number" name="startOdo" placeholder="Start Odometer"
+                                        inputmode="decimal" min="0" step="0.01" required>
+
+                                    <input type="number" name="endOdo" placeholder="End Odometer" inputmode="decimal"
+                                        min="0" step="0.01" required>
+
+                                    <input type="number" name="FuelUsed" placeholder="Fuel Used (Liters)"
+                                        inputmode="decimal" min="0" step="0.01" required>
+
+                                    <input type="number" name="FuelPrice" placeholder="Fuel Price / Liter"
+                                        inputmode="decimal" min="0" step="0.01" required>
+
+                                    <button class="finish" type="submit">
+                                        ✓ Finish Delivery
+                                    </button>
+
+                                </form>
+
+                                {% elif item.get('status') == 'done' %}
+
+                                <div class="completed-message">
+                                    ✔ Delivery Completed
+                                </div>
+
+                                {% elif item.get('status') == 'declined' %}
+
+                                <div class="declined-message">
+                                    ❌ Delivery Declined
+                                </div>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                📦<br>
+                                <strong>No deliveries assigned yet.</strong>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
 
-        <form action="/driver_update/{{ item.id }}" method="POST">
-
-            <form action="/driver_update/{{ item.id }}" method="POST">
-
-                <input type="number" name="startOdo" placeholder="Start Odometer" required>
-                <input type="number" name="endOdo" placeholder="End Odometer" required>
-                <input type="number" name="FuelUsed" placeholder="Fuel Used" required>
-                <input type="number" name="FuelPrice" placeholder="Fuel Price" required>
-
-                <button class="finish" type="submit">
-                    Finish Delivery
-                </button>
-
-            </form>
-
-            {% elif item.get('status') == 'done' %}
-
-            <div style="color:#10b981;font-weight:bold;">
-                ✔ Delivery Completed
-            </div>
-
-            {% elif item.get('status') == 'declined' %}
-
-            <div style="color:#ef4444;font-weight:bold;">
-                ❌ Delivery Declined
-            </div>
-
-            {% endif %}
-
-            </td>
-
-            </tr>
-
-            {% else %}
-
-            <tr>
-                <td colspan="6" style="text-align:center; opacity:0.6; padding:30px;">
-                    No deliveries assigned yet.
-                </td>
-            </tr>
-
-            {% endfor %}
-
-            </tbody>
-
-            </table>
-
-    </div>
-
-    </div>
+    </main>
 
 </body>
 

@@ -4,707 +4,1326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | RPV Water Delivery</title>
+
+    <title>RPV Water Delivery | Admin Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 15px 25px;
-            font-size: 1.3rem;
-            font-weight: bold;
+        body {
+            background: #f4f7fb;
+            color: #2d3748;
+        }
 
+        /* =====================================================
+   HEADER
+===================================================== */
+
+        header {
+            height: 75px;
+            background: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
-
+            padding: 0 35px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, .08);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 999;
         }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: #1976D2;
+        }
+
+        .logo h2 {
+            font-size: 23px;
+            color: #173F73;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-info div {
+            text-align: right;
+        }
+
+        .admin-info small {
+            color: #888;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #1976D2;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* =====================================================
+   LAYOUT
+===================================================== */
 
         .container {
             display: flex;
+            min-height: calc(100vh - 75px);
         }
 
+        /* =====================================================
+   SIDEBAR
+===================================================== */
+
         .sidebar {
-            width: 230px;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(10px);
+            width: 250px;
+            background: #173F73;
+            color: #fff;
+            padding: 30px 0;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, .05);
+        }
 
-            min-height: 100vh;
-
-            padding: 20px;
+        .sidebar h4 {
+            text-align: center;
+            margin-bottom: 35px;
+            color: #dbeafe;
         }
 
         .sidebar p {
-            padding: 14px;
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 30px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: .3s;
         }
 
         .sidebar p:hover {
-            background: rgba(59, 130, 246, 0.3);
-            transform: translateX(5px);
+            background: #1d4f91;
+            padding-left: 38px;
         }
+
+        .sidebar p i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout {
+            color: #ffb4b4;
+        }
+
+        /* =====================================================
+   MAIN CONTENT
+===================================================== */
 
         .main {
             flex: 1;
-            padding: 25px;
+            padding: 30px;
         }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            color: #173F73;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* =====================================================
+   CARD
+===================================================== */
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-
-            border-radius: 20px;
-
+            background: #fff;
+            border-radius: 18px;
             padding: 25px;
-
             margin-bottom: 25px;
-
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .05);
         }
 
-        h3 {
-            margin-top: 0;
-            color: #93c5fd;
+        .card h3 {
+            color: #173F73;
+            margin-bottom: 20px;
         }
 
-        input {
-            width: calc(100% - 24px);
+        /* =====================================================
+   KPI GRID
+===================================================== */
 
-            padding: 12px;
-
-            margin: 8px 0;
-
-            border-radius: 10px;
-
-            border: none;
-
-            background: rgba(255, 255, 255, 0.9);
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
         }
 
+        .kpi {
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .05);
+            transition: .3s;
+        }
+
+        .kpi:hover {
+            transform: translateY(-5px);
+        }
+
+        .kpi .left h5 {
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .kpi .left h2 {
+            color: #173F73;
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .kpi .left small {
+            color: #64748b;
+        }
+
+        .icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 28px;
+        }
+
+        /* COLORS */
+
+        .blue {
+            background: #1976D2;
+        }
+
+        .green {
+            background: #2E7D32;
+        }
+
+        .orange {
+            background: #FB8C00;
+        }
+
+        .red {
+            background: #D32F2F;
+        }
+
+        /* =====================================================
+   DASHBOARD GRID
+===================================================== */
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+            align-items: start;
+        }
+
+        /* =====================================================
+   FINANCIAL SUMMARY
+===================================================== */
+
+        .summary-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .summary-grid .kpi {
+            margin: 0;
+            width: 100%;
+        }
+
+        /* =====================================================
+   ANALYTICS
+===================================================== */
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .analytics-header small {
+            color: #64748b;
+        }
+
+        .chart-container {
+            height: 500px;
+            background: #fafcff;
+            border: 1px solid #edf2f7;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        /* =====================================================
+   FORM
+===================================================== */
+
+        input,
         select {
             width: 100%;
-
-            padding: 12px;
-
-            margin: 8px 0;
-
+            padding: 13px 15px;
+            border: 1px solid #d9e2ec;
             border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 15px;
+            transition: .3s;
+        }
 
-            border: none;
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #1976D2;
+            box-shadow: 0 0 0 4px rgba(25, 118, 210, .12);
         }
 
         button {
             width: 100%;
-
-            padding: 12px;
-
-            margin-top: 10px;
-
+            background: #1976D2;
+            color: #fff;
             border: none;
-
+            padding: 14px;
             border-radius: 10px;
-
-            background: #3b82f6;
-
-            color: white;
-
-            font-weight: bold;
-
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-
-            transition: 0.3s;
+            transition: .3s;
         }
 
         button:hover {
-            background: #60a5fa;
+            background: #1565C0;
         }
 
-        .income-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(auto-fit, minmax(150px, 1fr));
-
-            gap: 15px;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.05);
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            text-align: center;
-        }
-
-        .stat-box span {
-            color: #10b981;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
+        /* =====================================================
+   TABLE
+===================================================== */
 
         table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        th,
-        td {
-            padding: 12px;
-            border-bottom:
-                1px solid rgba(255, 255, 255, 0.1);
+        th {
+            background: #eef5fc;
+            color: #173F73;
+            padding: 14px;
+            text-align: left;
         }
 
-        th {
-            color: #93c5fd;
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf2f7;
         }
+
+        tr:hover {
+            background: #f8fbff;
+        }
+
+        /* =====================================================
+   MODALS
+===================================================== */
 
         .modal {
             display: none;
-
             position: fixed;
-
-            z-index: 1000;
-
-            left: 0;
-            top: 0;
-
-            width: 100%;
-            height: 100%;
-
-            background: rgba(0, 0, 0, 0.7);
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            z-index: 9999;
         }
 
         .modal-content {
-            background: #1e293b;
-
-            margin: 5% auto;
-
-            padding: 25px;
-
-            width: 85%;
-            max-width: 900px;
-
+            width: 90%;
+            max-width: 950px;
+            margin: 45px auto;
+            background: #fff;
             border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
         }
 
         .close {
             float: right;
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
-            color: #ef4444;
+            color: #888;
+        }
+
+        .close:hover {
+            color: #D32F2F;
+        }
+
+        /* =====================================================
+   RESPONSIVE
+===================================================== */
+
+        @media(max-width:1000px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
         }
     </style>
+
 </head>
 
 <body>
 
     <header>
 
-        <span>💧 RPV Water Delivery</span>
+        <div class="logo">
+            <i class="fa-solid fa-droplet"></i>
+            <h2>RPV Water Delivery</h2>
+        </div>
 
-        <small>Admin Dashboard</small>
+        <div class="admin-info">
+            <div>
+                <strong>Administrator</strong><br>
+                <small>Business Dashboard</small>
+            </div>
+
+            <div class="avatar">
+                A
+            </div>
+        </div>
 
     </header>
-
+    <!------maint container-->
     <div class="container">
 
         <!-- SIDEBAR -->
         <div class="sidebar">
 
+
+            <h4>MAIN MENU</h4>
+
             <p onclick="location.href='/admin_dashboard'">
-                🏠 Dashboard
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
             </p>
 
             <p onclick="openDriverModal()">
-                👤 Add Driver
+                <i class="fa-solid fa-user-plus"></i>
+                Add Driver
             </p>
 
             <p onclick="openStatusModal()">
-                📋 Delivery Status
+                <i class="fa-solid fa-truck-fast"></i>
+                Delivery Status
             </p>
 
-
-            <p onclick="location.href='/logout'" style="color:#fda4af;">
-                🚪 Logout
-            </p>
             <p onclick="openModal()">
-                📜 History
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                History
             </p>
-            <!-- DELIVERY STATUS MODAL -->
-            <div id="statusModal" class="modal">
 
-                <div class="modal-content">
+            <p class="logout" onclick="location.href='/logout'">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </p>
 
-                    <span class="close" onclick="closeStatusModal()">
-                        &times;
-                    </span>
 
-                    <h3>📋 Delivery Status</h3>
+        </div> <!----side bar end-->
 
-                    <table>
+        <!-- MAIN CONTENT -->
+        <div class="main">
 
-                        <thead>
-                            <tr>
-                                <th>Customer</th>
-                                <th>Driver</th>
-                                <th>Delivery Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
+            <!-- PAGE TITLE -->
+            <div class="page-title">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage deliveries and monitor business performance.</p>
+                </div>
+            </div>
 
-                        <tbody>
+            <!-- QUICK INSIGHTS -->
+            <div class="card">
+                <h3>
+                    <i class="fa-solid fa-lightbulb"></i>
+                    Quick Insights
+                </h3>
 
-                            {% for d in deliveries %}
+                <div class="kpi-grid">
 
-                            <tr>
+                    <!-- Revenue -->
+                    <div class="kpi">
 
-                                <td>{{ d.get('Customer_Name','-') }}</td>
+                        <div class="left">
+                            <h5>Revenue</h5>
+                            <h2>₱{{ total_income }}</h2>
+                            <small style="color:#64748b;">
+                                Total income generated.
+                            </small>
+                        </div>
 
-                                <td>{{ d.get('driver_name','-') }}</td>
+                        <div class="icon blue">
+                            <i class="fa-solid fa-money-bill-trend-up"></i>
+                        </div>
 
-                                <td>{{ d.get('delivery_date','-') }}</td>
+                    </div>
 
-                                <td>
+                    <!-- Fuel -->
+                    <div class="kpi">
 
-                                    {% if d.get('status') == 'Accepted' %}
+                        <div class="left">
+                            <h5>Fuel Cost</h5>
+                            <h2>₱{{ total_fuel }}</h2>
+                            <small style="color:#dc2626;">
+                                Transportation expenses.
+                            </small>
+                        </div>
 
-                                    <span style="
-                            background:#10b981;
-                            color:white;
-                            padding:6px 12px;
-                            border-radius:8px;
-                        ">
-                                        ✅ Accepted
-                                    </span>
+                        <div class="icon red">
+                            <i class="fa-solid fa-gas-pump"></i>
+                        </div>
 
-                                    {% elif d.get('status') == 'Declined' %}
+                    </div>
 
-                                    <span style="
-                            background:#ef4444;
-                            color:white;
-                            padding:6px 12px;
-                            border-radius:8px;
-                        ">
-                                        ❌ Declined
-                                    </span>
+                    <!-- Net Profit -->
+                    <div class="kpi">
 
-                                    {% else %}
+                        <div class="left">
+                            <h5>Net Profit</h5>
+                            <h2>₱{{ net_profit }}</h2>
+                            <small style="color:#16a34a;">
+                                Earnings after fuel costs.
+                            </small>
+                        </div>
 
-                                    <span style="
-                            background:#f59e0b;
-                            color:white;
-                            padding:6px 12px;
-                            border-radius:8px;
-                        ">
-                                        ⏳ Pending
-                                    </span>
+                        <div class="icon green">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
 
-                                    {% endif %}
+                    </div>
 
-                                </td>
+                    <!-- Completion Rate -->
+                    <div class="kpi">
 
-                            </tr>
+                        <div class="left">
+                            <h5>Completion Rate</h5>
 
-                            {% endfor %}
+                            <h2>
+                                {% if total_deliveries %}
+                                {{ ((completed_deliveries / total_deliveries) * 100)|round(1) }}%
+                                {% else %}
+                                0%
+                                {% endif %}
+                            </h2>
 
-                        </tbody>
+                            <small style="color:#f59e0b;">
+                                Delivery success rate.
+                            </small>
 
-                    </table>
+                        </div>
 
+                        <div class="icon orange">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div><!--quick insight end--->
+
+            <!-- Best Peak Month -->
+            <div class="kpi">
+                <div class="left">
+                    <h5>Peak Month</h5>
+                    <h2>{{ peak_month }}</h2>
+                    <small style="color:#1976D2;">
+                        Highest profit month.
+                    </small>
+                </div>
+                <div class="icon blue">
+                    <i class="fa-solid fa-calendar-star"></i>
                 </div>
 
             </div>
-        </div>
+            <div class="kpi">
 
-        <!-- MAIN -->
-        <div class="main">
+                <div class="left">
+                    <h5>Lowest Month</h5>
+                    <h2>{{ lowest_month }}</h2>
+                    <small style="color:#D32F2F;">
+                        Lowest profit month.
+                    </small>
+                </div>
 
-            <div style="
-            display:grid;
-            grid-template-columns:1fr 1.5fr;
-            gap:25px;
-        ">
+                <div class="icon red">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                </div>
 
-                <!-- ASSIGN DELIVERY -->
+            </div>
+
+            <!-- BUSINESS OVERVIEW -->
+            <div class="card">
+                <h3>
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Business Overview
+                </h3>
+
+                <div class="kpi-grid">
+
+                    <!-- Total Deliveries -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Total Deliveries</h5>
+                            <h2>{{ total_deliveries }}</h2>
+                            <small style="color:#6b7280;">
+                                All assigned deliveries
+                            </small>
+                        </div>
+
+                        <div class="icon blue">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Completed -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Completed</h5>
+                            <h2>{{ completed_deliveries }}</h2>
+                            <small style="color:#16a34a;">
+                                Successful deliveries
+                            </small>
+                        </div>
+
+                        <div class="icon green">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Pending -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Pending</h5>
+                            <h2>{{ pending_deliveries }}</h2>
+                            <small style="color:#f59e0b;">
+                                Waiting for driver
+                            </small>
+                        </div>
+
+                        <div class="icon orange">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Declined -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Declined</h5>
+                            <h2>{{ declined_deliveries }}</h2>
+                            <small style="color:#ef4444;">
+                                Rejected deliveries
+                            </small>
+                        </div>
+
+                        <div class="icon red">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Total Drivers -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Total Drivers</h5>
+                            <h2>{{ total_drivers }}</h2>
+                            <small style="color:#6b7280;">
+                                Registered drivers
+                            </small>
+                        </div>
+
+                        <div class="icon blue">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Customers -->
+                    <div class="kpi">
+
+                        <div class="left">
+                            <h5>Customers</h5>
+                            <h2>{{ total_customers }}</h2>
+                            <small style="color:#6b7280;">
+                                Active customers
+                            </small>
+                        </div>
+
+                        <div class="icon green">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div><!----business overview end-->
+
+            <!-- ASSIGN DELIVERY + FINANCIAL SUMMARY -->
+            <div class="dashboard-grid">
+
+                <!-- LEFT assign delivery-->
                 <div class="card">
-
-                    <h3>🚚 Assign Delivery</h3>
+                    <h3>
+                        <i class="fa-solid fa-truck-fast"></i>
+                        Assign New Delivery
+                    </h3>
 
                     <form method="POST">
 
-                        <input name="CustomerName" placeholder="Customer Name" required>
+                        <label>Customer Name</label>
+                        <input type="text" name="CustomerName" placeholder="Enter customer name" required>
 
-                        <input name="location" placeholder="Delivery Address" required>
+                        <label>Delivery Address</label>
+                        <input type="text" name="location" placeholder="Enter complete delivery address" required>
 
-                        <!-- DRIVER SELECTION -->
+                        <label>Select Driver</label>
+
                         <select name="driver_id" id="driverSelect" required>
 
-                            <option value="">
-                                Select Driver
-                            </option>
+                            <option value="">Choose Driver</option>
 
                             {% for d in drivers %}
-
                             <option value="{{ d.id }}" data-name="{{ d.name }}">
                                 {{ d.name }}
                             </option>
-
                             {% endfor %}
 
                         </select>
 
-                        <!-- DELIVERY DATE -->
-                        <label style="color:white;">Delivery Date</label>
+                        <input type="hidden" id="driver_name" name="driver_name">
+
+                        <label>Delivery Date</label>
                         <input type="date" name="delivery_date" required>
 
-                        <!-- DRIVER NAME -->
-                        <input type="hidden" name="driver_name" id="driver_name">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
 
-                        <div style="display:flex; gap:10px;">
+                            <div>
+                                <label>Tons</label>
+                                <input type="number" name="tons" placeholder="0" required>
+                            </div>
 
-                            <input type="number" name="tons" placeholder="Tons" required>
-
-                            <input type="number" name="price" placeholder="Price/Ton" required>
+                            <div>
+                                <label>Price per Ton</label>
+                                <input type="number" name="price" placeholder="₱" required>
+                            </div>
 
                         </div>
 
                         <button type="submit">
-                            Submit Assignment
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Assign Delivery
                         </button>
 
                     </form>
 
-                </div>
 
-                <!-- INCOME -->
+                </div><!--end of assign-->
+
+                <!-- RIGHT financial summary-->
                 <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-chart-column"></i>
+                        Financial Summary
+                    </h3>
 
-                    <h3>💰 Income Summary</h3>
+                    <div class="summary-grid">
 
-                    <div class="income-grid">
+                        <div class="kpi">
 
-                        <div class="stat-box">
-                            <small>Daily</small>
-                            <br>
-                            <span>₱{{ daily }}</span>
+                            <div class="left">
+                                <h5>Today's Revenue</h5>
+                                <h2>₱{{ daily }}</h2>
+                            </div>
+
+                            <div class="icon blue">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+
                         </div>
 
-                        <div class="stat-box">
-                            <small>Weekly</small>
-                            <br>
-                            <span>₱{{ weekly }}</span>
+                        <div class="kpi">
+
+                            <div class="left">
+                                <h5>This Week</h5>
+                                <h2>₱{{ weekly }}</h2>
+                            </div>
+
+                            <div class="icon green">
+                                <i class="fa-solid fa-calendar-week"></i>
+                            </div>
+
                         </div>
 
-                        <div class="stat-box">
-                            <small>Monthly</small>
-                            <br>
-                            <span>₱{{ monthly }}</span>
+                        <div class="kpi">
+
+                            <div class="left">
+                                <h5>This Month</h5>
+                                <h2>₱{{ monthly }}</h2>
+                            </div>
+
+                            <div class="icon orange">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <div style="
-                    margin-top:20px;
-                    padding:15px;
-                    border-radius:12px;
-                    background:rgba(16,185,129,0.1);
-                ">
+                </div><!----end of financial summary-->
 
-                        <strong>
-                            Net Profit:
-                        </strong>
 
-                        ₱{{ net_profit }}
+            </div><!--end of dashboard grid-->
 
-                        <br><br>
-
-                        <small>
-                            Total Income:
-                            ₱{{ total_income }}
-                        </small>
-
-                        <br>
-
-                        <small>
-                            Fuel Expenses:
-                            ₱{{ total_fuel }}
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- CHART -->
+            <!-- ANALYTICS -->
             <div class="card">
 
-                <h3>📊 Profit Analytics</h3>
+                <div class="analytics-header">
 
-                <div style="height:350px;">
+                    <div>
 
-                    <canvas id="analyticsChart"></canvas>
+                        <h3>
+                            <i class="fa-solid fa-chart-line"></i>
+                            Revenue & Profit Analytics
+                        </h3>
+
+                        <small style="color:#64748b;">
+                            Business performance over time
+                        </small>
+
+                    </div>
+
+                    <select id="chartType" style="width:140px;margin:0;">
+                        <option value="line">📈 Line</option>
+                        <option value="bar">📊 Bar</option>
+                        <option value="pie">🥧 Pie</option>
+                    </select>
 
                 </div>
+
+                <div class="chart-container">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+
+            </div>
+
+
+        </div>
+        <!-- END MAIN -->
+
+        <!-----MODALS-->
+
+        <!-- ==========================================
+         DELIVERY STATUS MODAL
+    =========================================== -->
+        <div id="statusModal" class="modal">
+
+            <div class="modal-content">
+
+                <span class="close" onclick="closeStatusModal()">
+                    &times;
+                </span>
+
+                <h3>📋 Delivery Status</h3>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Driver</th>
+                            <th>Delivery Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for d in deliveries %}
+
+                        <tr>
+
+                            <td>{{ d.get('Customer_Name','-') }}</td>
+
+                            <td>{{ d.get('driver_name','-') }}</td>
+
+                            <td>{{ d.get('delivery_date','-') }}</td>
+
+                            <td>
+
+                                {% if d.get('status') == 'Accepted' %}
+
+                                <span style="
+                                background:#10b981;
+                                color:white;
+                                padding:6px 12px;
+                                border-radius:8px;
+                            ">
+                                    ✅ Accepted
+                                </span>
+
+                                {% elif d.get('status') == 'Declined' %}
+
+                                <span style="
+                                background:#ef4444;
+                                color:white;
+                                padding:6px 12px;
+                                border-radius:8px;
+                            ">
+                                    ❌ Declined
+                                </span>
+
+                                {% else %}
+
+                                <span style="
+                                background:#f59e0b;
+                                color:white;
+                                padding:6px 12px;
+                                border-radius:8px;
+                            ">
+                                    ⏳ Pending
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
 
             </div>
 
         </div>
 
-    </div>
+        <!-- ==========================================
+         ADD DRIVER MODAL
+    =========================================== -->
+        <div id="driverModal" class="modal">
 
-    <!-- HISTORY MODAL -->
-    <div id="modal" class="modal">
+            <div class="modal-content" style="max-width:400px;">
 
-        <div class="modal-content">
+                <span class="close" onclick="closeDriverModal()">
+                    &times;
+                </span>
 
-            <span class="close" onclick="closeModal()">
-                &times;
-            </span>
+                <h3>
+                    <i class="fa-solid fa-user-plus"></i>
+                    Add Driver
+                </h3>
 
-            <h3>📜 Delivery History</h3>
+                <form method="POST" action="/add_driver">
 
-            <input id="search" placeholder="Search..." onkeyup="search()">
+                    <input type="text" name="name" placeholder="Full Name" required>
 
-            <table>
+                    <input type="text" name="address" placeholder="Address" required>
 
-                <thead>
+                    <input type="text" name="contact" placeholder="Contact Number" required>
 
-                    <tr>
-                        <th>Customer</th>
-                        <th>Location</th>
-                        <th>Driver</th>
-                        <th>Assigned Date</th>
-                        <th>Delivery Date</th>
-                        <th>Income</th>
-                        <th>Profit</th>
-                    </tr>
+                    <button type="submit">
+                        Register Driver
+                    </button>
 
-                </thead>
+                </form>
 
-                <tbody id="table">
-
-                    {% for h in history %}
-
-                    <tr>
-
-                        <td>
-                            {{ h.get('Customer_Name', 'N/A') }}
-                        </td>
-
-                        <td>
-                            {{ h.get('location', '-') }}
-                        </td>
-
-                        <td>
-                            {{ h.get('driver_name', '-') }}
-                        </td>
-
-                        <td>
-                            {{ h.get('date_assigned', '-') }}
-                        </td>
-
-                        <td>
-                            {{ h.get('delivery_date', '-') }}
-                        </td>
-
-                        <td>
-                            ₱{{ h.get('total_price', 0) }}
-                        </td>
-
-                        <td style="
-                        color:#10b981;
-                        font-weight:bold;
-                    ">
-                            ₱{{ h.get('profit', 0) }}
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            </div>
 
         </div>
 
-    </div>
+        <!-- ==========================================
+         DELIVERY HISTORY MODAL
+    =========================================== -->
+        <div id="modal" class="modal">
 
-    <!-- DRIVER MODAL -->
-    <div id="driverModal" class="modal">
+            <div class="modal-content">
 
-        <div class="modal-content" style="max-width:400px;">
+                <span class="close" onclick="closeModal()">
+                    &times;
+                </span>
 
-            <span class="close" onclick="closeDriverModal()">
-                &times;
-            </span>
+                <h3>📜 Delivery History</h3>
 
-            <h3>👤 Add Driver</h3>
+                <input id="search" type="text" placeholder="Search..." onkeyup="search()">
 
-            <form method="POST" action="/add_driver">
+                <table>
 
-                <input name="name" placeholder="Full Name" required>
+                    <thead>
 
-                <input name="address" placeholder="Address" required>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Driver</th>
+                            <th>Assigned Date</th>
+                            <th>Delivery Date</th>
+                            <th>Income</th>
+                            <th>Profit</th>
+                        </tr>
 
-                <input name="contact" placeholder="Contact Number" required>
+                    </thead>
 
-                <button type="submit">
-                    Register Driver
-                </button>
+                    <tbody id="table">
 
-            </form>
+                        {% for h in history %}
+
+                        <tr>
+
+                            <td>{{ h.get('Customer_Name', 'N/A') }}</td>
+
+                            <td>{{ h.get('location', '-') }}</td>
+
+                            <td>{{ h.get('driver_name', '-') }}</td>
+
+                            <td>{{ h.get('date_assigned', '-') }}</td>
+
+                            <td>{{ h.get('delivery_date', '-') }}</td>
+
+                            <td>
+                                ₱{{ h.get('total_price', 0) }}
+                            </td>
+
+                            <td style="color:#10b981;font-weight:bold;">
+                                ₱{{ h.get('profit', 0) }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
-    </div>
 
-    <script>
+        <!-- =========================
+         JAVASCRIPT
+    ========================== -->
 
-        // ================= DRIVER NAME =================
+        <script>
 
-        document
-            .getElementById("driverSelect")
-            .addEventListener("change", function () {
+            // =========================
+            // DRIVER NAME
+            // =========================
+            document.getElementById("driverSelect").addEventListener("change", function () {
 
-                const selectedOption =
-                    this.options[this.selectedIndex];
+                const selectedOption = this.options[this.selectedIndex];
 
                 document.getElementById("driver_name").value =
                     selectedOption.getAttribute("data-name");
+
             });
 
-        // ================= MODAL =================
+            // =========================
+            // HISTORY MODAL
+            // =========================
+            function openModal() {
+                document.getElementById("modal").style.display = "block";
+            }
 
-        function openModal() {
-            document.getElementById("modal")
-                .style.display = "block";
-        }
+            function closeModal() {
+                document.getElementById("modal").style.display = "none";
+            }
 
-        function closeModal() {
-            document.getElementById("modal")
-                .style.display = "none";
-        }
+            // =========================
+            // DRIVER MODAL
+            // =========================
+            function openDriverModal() {
+                document.getElementById("driverModal").style.display = "block";
+            }
 
-        function openDriverModal() {
-            document.getElementById("driverModal")
-                .style.display = "block";
-        }
+            function closeDriverModal() {
+                document.getElementById("driverModal").style.display = "none";
+            }
 
-        function closeDriverModal() {
-            document.getElementById("driverModal")
-                .style.display = "none";
-        }
+            // =========================
+            // DELIVERY STATUS MODAL
+            // =========================
+            function openStatusModal() {
+                document.getElementById("statusModal").style.display = "block";
+            }
 
-        // ================= SEARCH =================
+            function closeStatusModal() {
+                document.getElementById("statusModal").style.display = "none";
+            }
 
-        function search() {
+            // =========================
+            // HISTORY SEARCH
+            // =========================
+            function search() {
 
-            let val =
-                document.getElementById("search")
+                let val = document
+                    .getElementById("search")
                     .value
                     .toLowerCase();
 
-            let rows =
-                document.querySelectorAll("#table tr");
+                let rows = document.querySelectorAll("#table tr");
 
-            rows.forEach(row => {
+                rows.forEach(row => {
 
-                row.style.display =
-                    row.innerText.toLowerCase()
-                        .includes(val)
-                        ? ""
-                        : "none";
-            });
-        }
-        function openStatusModal() {
-            document.getElementById("statusModal")
-                .style.display = "block";
-        }
+                    row.style.display =
+                        row.innerText.toLowerCase().includes(val)
+                            ? ""
+                            : "none";
 
-        function closeStatusModal() {
-            document.getElementById("statusModal")
-                .style.display = "none";
-        }
+                });
 
-        // ================= CLOSE MODAL =================
-
-        window.onclick = function (event) {
-
-            if (event.target.className === 'modal') {
-
-                event.target.style.display = "none";
             }
-        }
 
-        // ================= CHART =================
-        const ctx = document.getElementById("analyticsChart").getContext("2d");
+            // =========================
+            // CLOSE MODALS
+            // =========================
+            window.onclick = function (event) {
 
-        new Chart(ctx, {
-            type: "line",
-            data: {
+                if (event.target.className === "modal") {
+                    event.target.style.display = "none";
+                }
+
+            };
+
+            // =========================
+            // CHART.JS
+            // =========================
+            const ctx = document.getElementById("analyticsChart");
+
+            const chartData = {
+
                 labels: {{ chart_labels | tojson }},
+
             datasets: [{
-                label: "Profit",
+
+                label: "Net Profit",
+
                 data: {{ chart_values | tojson }},
-            borderWidth: 3,
-            tension: 0.4,
-            fill: true,
-            backgroundColor: "rgba(59,130,246,0.2)",
-            borderColor: "#60a5fa",
-            pointBackgroundColor: "#93c5fd"
-        }]
-    },
-            options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: "white"
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: "white"
+
+                borderColor: "#2563eb",
+
+                backgroundColor: [
+                "#2563eb",
+                "#16a34a",
+                "#f59e0b",
+                "#dc2626",
+                "#7c3aed",
+                "#0891b2",
+                "#ea580c",
+                "#db2777"
+            ],
+
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3
+
+                }]
+
+            };
+
+            let analyticsChart = new Chart(ctx, {
+
+                type: "line",
+
+                data: chartData,
+
+                options: getOptions("line")
+            });
+
+            function getOptions(type) {
+
+                return {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "top"
+
+                        }
+
                     },
-                    grid: {
-                        color: "rgba(255,255,255,0.1)"
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: "white"
-                    },
-                    grid: {
-                        color: "rgba(255,255,255,0.1)"
-                    }
-                }
+
+                    scales: type === "pie"
+                        ? {}
+                        : {
+
+                            y: {
+
+                                beginAtZero: true
+
+                            },
+
+                            x: {
+
+                                grid: {
+
+                                    display: false
+
+                                }
+
+                            }
+
+                        }
+
+                };
+
             }
-        }
-});
-    </script>
+
+            document.getElementById("chartType").addEventListener("change", function () {
+
+                analyticsChart.destroy();
+
+                analyticsChart = new Chart(ctx, {
+
+                    type: this.value,
+
+                    data: chartData,
+
+                    options: getOptions(this.value)
+
+                });
+
+            });
+
+        </script>
+
+        <!-- =========================
+         FIREBASE REALTIME
+    ========================== -->
+
+        <script type="module">
+
+            import { initializeApp }
+                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+            import {
+                getFirestore,
+                collection,
+                onSnapshot
+            }
+                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+            const firebaseConfig = {
+
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                projectId: "YOUR_PROJECT_ID"
+
+            };
+
+            const app = initializeApp(firebaseConfig);
+
+            const db = getFirestore(app);
+
+            // IMPORTANT:
+            // Only runs if deliveryTableBody exists.
+            const table = document.getElementById("deliveryTableBody");
+
+            if (table) {
+
+                onSnapshot(collection(db, "deliveries"), (snapshot) => {
+
+                    table.innerHTML = "";
+
+                    snapshot.forEach((doc) => {
+
+                        const delivery = doc.data();
+
+                        table.innerHTML += `
+                        <tr>
+                            <td>${delivery.customer_name ?? "-"}</td>
+                            <td>${delivery.driver_name ?? "-"}</td>
+                            <td>${delivery.status ?? "-"}</td>
+                            <td>${delivery.date ?? "-"}</td>
+                        </tr>
+                    `;
+
+                    });
+
+                });
+
+            }
+
+        </script>
+
 </body>
 
 </html>
