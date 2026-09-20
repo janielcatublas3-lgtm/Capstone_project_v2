@@ -39,10 +39,10 @@ BASE_URL = os.environ.get(
 
 
 # Google OAuth Client ID
-CLIENT_ID = os.environ.get(
-    "GOOGLE_CLIENT_ID",
-    "737562037990-n21m7uc217rhihqs83r5j5hene4b2jf6.apps.googleusercontent.com"
-)
+CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+
+if not CLIENT_ID:
+    raise RuntimeError("GOOGLE_CLIENT_ID environment variable is not set")
 
 
 # =========================================================
@@ -146,7 +146,10 @@ def driver_login_required(f):
 @app.route("/")
 def index():
 
-    return render_template("admin_log_in.html")
+    return render_template(
+        "admin_log_in.html",
+        google_client_id=CLIENT_ID
+    )
 
 
 @app.route("/google-auth", methods=["POST"])

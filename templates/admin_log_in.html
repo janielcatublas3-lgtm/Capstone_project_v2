@@ -5,7 +5,9 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <title>Water Station Admin</title>
 
     <style>
@@ -24,7 +26,9 @@
             position: absolute;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%);
+            background: radial-gradient(circle,
+                    rgba(59, 130, 246, 0.2),
+                    transparent 70%);
             animation: moveBg 20s linear infinite;
             z-index: 0;
         }
@@ -48,7 +52,9 @@
             position: absolute;
             bottom: -120px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(59, 130, 246, 0.3));
+            background: radial-gradient(circle at 30% 30%,
+                    rgba(255, 255, 255, 0.9),
+                    rgba(59, 130, 246, 0.3));
             box-shadow: 0 0 15px rgba(147, 197, 253, 0.6);
             animation: rise linear infinite;
             pointer-events: none;
@@ -127,7 +133,9 @@
             padding: 12px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            background: linear-gradient(90deg,
+                    #1e3a8a,
+                    #3b82f6);
             color: white;
             font-size: 16px;
             cursor: pointer;
@@ -176,25 +184,35 @@
             margin-top: 10px;
         }
     </style>
+
 </head>
 
 <body>
 
     <!-- 🌊 BUBBLES -->
     <script>
+
         function createBubbles() {
+
             for (let i = 0; i < 30; i++) {
+
                 let bubble = document.createElement("div");
+
                 bubble.classList.add("bubble");
 
                 let size = Math.random() * 60 + 10;
 
                 bubble.style.width = size + "px";
                 bubble.style.height = size + "px";
-                bubble.style.left = Math.random() * 100 + "%";
 
-                bubble.style.animationDuration = (Math.random() * 6 + 4) + "s";
-                bubble.style.animationDelay = Math.random() * 5 + "s";
+                bubble.style.left =
+                    Math.random() * 100 + "%";
+
+                bubble.style.animationDuration =
+                    (Math.random() * 6 + 4) + "s";
+
+                bubble.style.animationDelay =
+                    Math.random() * 5 + "s";
 
                 document.body.appendChild(bubble);
             }
@@ -202,68 +220,120 @@
 
         window.addEventListener("load", function () {
             createBubbles();
-
-            google.accounts.id.initialize({
-                client_id: "YOUR_GOOGLE_CLIENT_ID",
-                callback: handleCredentialResponse
-            });
-
-            google.accounts.id.renderButton(
-                document.getElementById("googleSignIn"),
-                { theme: "outline", size: "large", width: 250 }
-            );
         });
+
     </script>
 
+
     <!-- LOGIN CARD -->
+
     <div class="login-container">
 
         <h2>💧 RPV Water Delivery</h2>
-        <div class="subtitle">Secure Admin Access</div>
+
+        <div class="subtitle">
+            Secure Admin Access
+        </div>
 
         <div id="googleSignIn"></div>
 
         <div class="spinner" id="loading"></div>
 
-        <div class="error" id="error">Invalid login</div>
-        <div class="success" id="success">Access granted!</div>
+        <div class="error" id="error">
+            Invalid login
+        </div>
+
+        <div class="success" id="success">
+            Access granted!
+        </div>
 
     </div>
+
+
+    <!-- GOOGLE LOGIN -->
 
     <script>
 
         // --------------------------
         // GOOGLE LOGIN CALLBACK
         // --------------------------
+
         function handleCredentialResponse(response) {
-            const form = document.createElement("form");
+
+            const form =
+                document.createElement("form");
+
             form.method = "POST";
+
             form.action = "/google-auth";
 
-            const input = document.createElement("input");
+
+            const input =
+                document.createElement("input");
+
             input.type = "hidden";
+
             input.name = "token";
-            input.value = response.credential;
+
+            input.value =
+                response.credential;
+
 
             form.appendChild(input);
+
             document.body.appendChild(form);
+
             form.submit();
         }
+
 
         // --------------------------
         // INITIALIZE GOOGLE BUTTON
         // --------------------------
-        window.onload = function () {
+
+        window.addEventListener("load", function () {
+
+            if (
+                typeof google === "undefined" ||
+                !google.accounts ||
+                !google.accounts.id
+            ) {
+
+                console.error(
+                    "Google Identity Services failed to load."
+                );
+
+                return;
+            }
+
+
             google.accounts.id.initialize({
-                client_id: "737562037990-n21m7uc217rhihqs83r5j5hene4b2jf6.apps.googleusercontent.com",
-                callback: handleCredentialResponse
+
+                client_id:
+                    "{{ google_client_id }}",
+
+                callback:
+                    handleCredentialResponse
+
             });
 
+
             google.accounts.id.renderButton(
-                document.getElementById("googleSignIn"),
-                { theme: "outline", size: "large", width: 250 }
+
+                document.getElementById(
+                    "googleSignIn"
+                ),
+
+                {
+                    theme: "outline",
+                    size: "large",
+                    width: 250
+                }
+
             );
-        };
+
+        });
+
     </script>
 
 </body>
