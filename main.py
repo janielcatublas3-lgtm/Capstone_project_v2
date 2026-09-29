@@ -758,7 +758,60 @@ def add_driver():
     </body>
     </html>
     """
+# =========================================================
+# DELETE DRIVER
+# =========================================================
 
+@app.route("/delete_driver", methods=["POST"])
+@login_required
+def delete_driver():
+
+    driver_id = request.form.get("driver_id")
+
+    if not driver_id:
+        return redirect(url_for("admin_dashboard"))
+
+    try:
+
+        # -------------------------------------------------
+        # CHECK IF DRIVER EXISTS
+        # -------------------------------------------------
+
+        driver_ref = db.collection("drivers").document(driver_id)
+        driver_doc = driver_ref.get()
+
+        if not driver_doc.exists:
+            return redirect(url_for("admin_dashboard"))
+
+        # -------------------------------------------------
+        # DELETE DRIVER ACCOUNT
+        # -------------------------------------------------
+
+        driver_ref.delete()
+
+        # -------------------------------------------------
+        # DELETE ACTIVE ASSIGNMENTS
+        # BELONGING TO THIS DRIVER
+        # -------------------------------------------------
+
+        assignments = (
+            db.collection("assignments")
+            .where("driver_id", "==", driver_id)
+            .stream()
+        )
+
+        for assignment in assignments:
+            assignment.reference.delete()
+
+        print(f"Driver {driver_id} deleted successfully.")
+
+        return redirect(url_for("admin_dashboard"))
+
+    except Exception as e:
+
+        print("DELETE DRIVER ERROR:", e)
+
+        return redirect(url_for("admin_dashboard"))
 
 # =========================================================
 # DRIVER REGISTRATION
