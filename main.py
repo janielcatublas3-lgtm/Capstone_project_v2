@@ -790,8 +790,8 @@ def delete_driver():
         driver_ref.delete()
 
         # -------------------------------------------------
-        # DELETE ACTIVE ASSIGNMENTS
-        # BELONGING TO THIS DRIVER
+        # DELETE ONLY ACTIVE ASSIGNMENTS
+        # PRESERVE COMPLETED DELIVERY HISTORY
         # -------------------------------------------------
 
         assignments = (
@@ -801,7 +801,14 @@ def delete_driver():
         )
 
         for assignment in assignments:
-            assignment.reference.delete()
+
+            data = assignment.to_dict()
+
+            status = data.get("status")
+
+            # Delete only unfinished deliveries
+            if status in ["pending", "accepted", "declined"]:
+                assignment.reference.delete()
 
         print(f"Driver {driver_id} deleted successfully.")
 
