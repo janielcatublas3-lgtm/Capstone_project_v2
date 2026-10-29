@@ -210,6 +210,50 @@
             margin: 0;
         }
 
+        /* Monthly filter */
+        .delivery-filter {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+
+        .delivery-filter label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .delivery-filter input {
+            width: auto;
+            min-width: 190px;
+            margin-top: 0;
+        }
+
+        .clear-filter {
+            width: auto;
+            min-height: 44px;
+            padding: 10px 16px;
+            background: #1e3a8a;
+            color: #fff;
+            border-radius: 9px;
+        }
+
+        .clear-filter:hover {
+            background: #1d4ed8;
+        }
+
+        .filter-result {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 13px;
+        }
+
         .delivery-table-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -276,22 +320,22 @@
             white-space: nowrap;
         }
 
-        .pending {
+        .status.pending {
             background: #fef3c7;
             color: #92400e;
         }
 
-        .accepted {
+        .status.accepted {
             background: #dcfce7;
             color: #166534;
         }
 
-        .done {
+        .status.done {
             background: #dbeafe;
             color: #1d4ed8;
         }
 
-        .declined {
+        .status.declined {
             background: #fee2e2;
             color: #991b1b;
         }
@@ -446,7 +490,8 @@
                 display: none;
             }
 
-            tbody tr {
+            tbody tr.delivery-row,
+            tbody tr.server-empty {
                 background: #fff;
                 border: 1px solid #e2e8f0;
                 border-radius: 14px;
@@ -465,6 +510,10 @@
                 min-height: 48px;
             }
 
+            tbody tr.server-empty td {
+                display: block;
+            }
+
             tbody td:last-child {
                 border-bottom: none;
             }
@@ -477,6 +526,10 @@
                 min-width: 85px;
                 flex-shrink: 0;
                 padding-top: 2px;
+            }
+
+            tbody tr.server-empty td::before {
+                content: none;
             }
 
             .customer-name {
@@ -605,6 +658,23 @@
                 margin-bottom: 13px;
             }
 
+            .delivery-filter {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
+            }
+
+            .delivery-filter input,
+            .clear-filter {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .filter-result {
+                margin-left: 0;
+            }
+
             tbody td {
                 padding: 11px 12px;
                 font-size: 13px;
@@ -731,8 +801,26 @@
                 <h2>📦 My Deliveries</h2>
             </div>
 
+            <!-- Monthly Delivery Filter -->
+            <div class="delivery-filter">
+
+                <label for="monthFilter">📅 Filter by Month:</label>
+
+                <input type="month" id="monthFilter" aria-label="Select delivery month">
+
+                <button type="button" class="clear-filter" id="clearFilter">
+                    Show All Months
+                </button>
+
+                <span class="filter-result" id="filterResult" aria-live="polite">
+                    Showing all deliveries
+                </span>
+
+            </div>
+
             <div class="mobile-summary">
                 Manage your assigned deliveries below. Accept a delivery to enter the trip details.
+                Deliveries are arranged from the earliest date to the latest.
             </div>
 
             <div class="delivery-table-wrapper">
@@ -751,11 +839,11 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="deliveryRows">
 
                         {% for item in Input_Dashboard %}
 
-                        <tr>
+                        <tr class="delivery-row" data-delivery-date="{{ item.get('delivery_date', '') }}">
 
                             <td data-label="Customer">
                                 <div>
@@ -865,7 +953,7 @@
 
                         {% else %}
 
-                        <tr>
+                        <tr class="server-empty">
                             <td colspan="7" class="empty-state">
                                 📦<br>
                                 <strong>No deliveries assigned yet.</strong>
@@ -873,6 +961,17 @@
                         </tr>
 
                         {% endfor %}
+
+                        <!-- Displayed when the selected month has no deliveries -->
+                        <tr id="noFilteredResults" style="display: none;">
+                            <td colspan="7" class="empty-state">
+                                📅<br>
+                                <strong>No deliveries found for this month.</strong>
+                                <p style="margin-top: 8px;">
+                                    Select another month or click "Show All Months".
+                                </p>
+                            </td>
+                        </tr>
 
                     </tbody>
 
@@ -883,6 +982,114 @@
         </div>
 
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const monthFilter = document.getElementById("monthFilter");
+            const clearFilter = document.getElementById("clearFilter");
+            const deliveryRows = document.getElementById("deliveryRows");
+            const filterResult = document.getElementById("filterResult");
+            const noFilteredResults = document.getElementById("noFilteredResults");
+
+            if (!monthFilter || !clearFilter || !deliveryRows) {
+                return;
+            }
+
+            function updateDeliveries() {
+
+                const selectedMonth = monthFilter.value;
+
+                const rows = Array.from(
+                    deliveryRows.querySelectorAll(".delivery-row")
+                );
+
+                // Sort by scheduled delivery date, earliest to latest.
+                rows.sort(function (a, b) {
+
+                    const dateA = (a.dataset.deliveryDate || "").trim();
+                    const dateB = (b.dataset.deliveryDate || "").trim();
+
+                    // Put missing dates after valid dates.
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return 1;
+                    if (!dateB) return -1;
+
+                    return dateA.localeCompare(dateB);
+                });
+
+                // Reorder the existing rows without changing their forms.
+                rows.forEach(function (row) {
+                    deliveryRows.insertBefore(row, noFilteredResults);
+                });
+
+                let visibleCount = 0;
+
+                rows.forEach(function (row) {
+
+                    const deliveryDate =
+                        (row.dataset.deliveryDate || "").trim();
+
+                    // Assumes dates are stored as YYYY-MM-DD.
+                    const matchesMonth =
+                        !selectedMonth ||
+                        deliveryDate.startsWith(selectedMonth);
+
+                    row.style.display = matchesMonth ? "" : "none";
+
+                    if (matchesMonth) {
+                        visibleCount++;
+                    }
+                });
+
+                // Show an appropriate empty-state message.
+                if (rows.length === 0) {
+
+                    noFilteredResults.style.display = "none";
+
+                    filterResult.textContent = selectedMonth
+                        ? "No deliveries for the selected month"
+                        : "No deliveries assigned";
+
+                    return;
+                }
+
+                noFilteredResults.style.display =
+                    visibleCount === 0 ? "" : "none";
+
+                if (selectedMonth) {
+
+                    const monthName = new Date(
+                        selectedMonth + "-02T12:00:00"
+                    ).toLocaleDateString("en-PH", {
+                        month: "long",
+                        year: "numeric"
+                    });
+
+                    filterResult.textContent =
+                        visibleCount + " delivery/deliveries in " + monthName;
+
+                } else {
+
+                    filterResult.textContent =
+                        "Showing all " + visibleCount + " deliveries";
+                }
+            }
+
+            // Filter whenever the driver selects a month.
+            monthFilter.addEventListener("change", updateDeliveries);
+
+            // Reset the filter to show every delivery.
+            clearFilter.addEventListener("click", function () {
+                monthFilter.value = "";
+                updateDeliveries();
+            });
+
+            // Sort deliveries automatically when the page loads.
+            updateDeliveries();
+
+        });
+    </script>
 
 </body>
 
