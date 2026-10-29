@@ -850,6 +850,113 @@
 
             </div><!--end of dashboard grid-->
 
+            <!-- MONTHLY INCOME AND EXPENSE REPORT -->
+            <div class="card">
+                <h3>
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Monthly Income & Expenses
+                </h3>
+
+                <div style="display:grid;
+                grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:15px;margin-bottom:20px;">
+
+                    <div>
+                        <label for="reportMonth">Select Month</label>
+                        <select id="reportMonth">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="reportYear">Select Year</label>
+                        <select id="reportYear"></select>
+                    </div>
+                </div>
+
+                <div class="kpi-grid" style="margin-bottom:25px;">
+
+                    <div class="kpi">
+                        <div class="left">
+                            <h5>Total Income</h5>
+                            <h2 id="monthlyIncome">₱0.00</h2>
+                            <small>Completed deliveries</small>
+                        </div>
+                        <div class="icon green">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="left">
+                            <h5>Total Expenses</h5>
+                            <h2 id="monthlyExpenses">₱0.00</h2>
+                            <small>Recorded fuel costs</small>
+                        </div>
+                        <div class="icon red">
+                            <i class="fa-solid fa-gas-pump"></i>
+                        </div>
+                    </div>
+
+                    <div class="kpi">
+                        <div class="left">
+                            <h5>Net Profit</h5>
+                            <h2 id="monthlyProfit">₱0.00</h2>
+                            <small>Income minus expenses</small>
+                        </div>
+                        <div class="icon blue">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h3>Daily Breakdown</h3>
+
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthlyReportBody"></tbody>
+                        <tfoot>
+                            <tr style="font-weight:bold;background:#eef5fc;">
+                                <td>MONTH TOTAL</td>
+                                <td id="reportTotalIncome">₱0.00</td>
+                                <td id="reportTotalExpenses">₱0.00</td>
+                                <td id="reportTotalProfit">₱0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- Data source: existing delivery history -->
+                <div id="monthlyReportData" hidden>
+                    {% for h in history %}
+                    <div class="report-record" data-date="{{ h.get('delivery_date', '') }}"
+                        data-income="{{ h.get('total_price', 0) }}" data-expense="{{ h.get('fuel_cost', 0) }}"
+                        data-status="{{ h.get('status', '') }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
             <!-- ANALYTICS -->
             <div class="card">
 
