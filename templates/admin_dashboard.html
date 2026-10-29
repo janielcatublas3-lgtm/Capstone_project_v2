@@ -4,32 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>RPV Water Delivery | Admin Dashboard</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif
         }
 
         body {
             background: #f4f7fb;
-            color: #2d3748;
+            color: #2d3748
         }
-
-        /* =====================================================
-   HEADER
-===================================================== */
 
         header {
             height: 75px;
@@ -38,40 +29,40 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 35px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, .08);
+            box-shadow: 0 3px 15px #00000014;
             position: sticky;
             top: 0;
-            z-index: 999;
+            z-index: 999
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 15px
         }
 
         .logo i {
             font-size: 28px;
-            color: #1976D2;
+            color: #1976D2
         }
 
         .logo h2 {
             font-size: 23px;
-            color: #173F73;
+            color: #173F73
         }
 
         .admin-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 15px
         }
 
         .admin-info div {
-            text-align: right;
+            text-align: right
         }
 
         .admin-info small {
-            color: #888;
+            color: #888
         }
 
         .avatar {
@@ -84,108 +75,91 @@
             justify-content: center;
             align-items: center;
             font-weight: 600;
-            font-size: 18px;
+            font-size: 18px
         }
-
-        /* =====================================================
-   LAYOUT
-===================================================== */
 
         .container {
             display: flex;
-            min-height: calc(100vh - 75px);
+            min-height: calc(100vh - 75px)
         }
-
-        /* =====================================================
-   SIDEBAR
-===================================================== */
 
         .sidebar {
             width: 250px;
+            flex-shrink: 0;
             background: #173F73;
             color: #fff;
             padding: 30px 0;
-            box-shadow: 5px 0 20px rgba(0, 0, 0, .05);
+            box-shadow: 5px 0 20px #0000000d
         }
 
         .sidebar h4 {
             text-align: center;
-            margin-bottom: 35px;
-            color: #dbeafe;
+            margin-bottom: 25px;
+            color: #dbeafe
         }
 
         .sidebar p {
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 16px 30px;
+            padding: 15px 25px;
             cursor: pointer;
-            transition: .3s;
+            transition: .2s
         }
 
         .sidebar p:hover {
             background: #1d4f91;
-            padding-left: 38px;
+            padding-left: 32px
         }
 
         .sidebar p i {
             width: 20px;
-            text-align: center;
+            text-align: center
         }
 
         .logout {
-            color: #ffb4b4;
+            color: #ffb4b4
         }
-
-        /* =====================================================
-   MAIN CONTENT
-===================================================== */
 
         .main {
             flex: 1;
-            padding: 30px;
+            min-width: 0;
+            padding: 30px
         }
 
         .page-title {
-            margin-bottom: 25px;
+            margin-bottom: 25px
         }
 
         .page-title h1 {
             color: #173F73;
             font-size: 30px;
-            font-weight: 700;
+            font-weight: 700
         }
 
         .page-title p {
             color: #64748b;
-            margin-top: 6px;
+            margin-top: 6px
         }
-
-        /* =====================================================
-   CARD
-===================================================== */
 
         .card {
             background: #fff;
             border-radius: 18px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .05);
+            box-shadow: 0 8px 25px #0000000d;
+            min-width: 0
         }
 
         .card h3 {
             color: #173F73;
-            margin-bottom: 20px;
+            margin-bottom: 20px
         }
-
-        /* =====================================================
-   KPI GRID
-===================================================== */
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px
         }
 
         .kpi {
@@ -195,193 +169,189 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, .05);
-            transition: .3s;
+            gap: 12px;
+            box-shadow: 0 5px 15px #0000000d;
+            transition: .2s;
+            min-width: 0
         }
 
         .kpi:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px)
+        }
+
+        .kpi .left {
+            min-width: 0
         }
 
         .kpi .left h5 {
             color: #64748b;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 8px
         }
 
         .kpi .left h2 {
             color: #173F73;
-            font-size: 28px;
+            font-size: 25px;
             margin-bottom: 6px;
+            overflow-wrap: anywhere
         }
 
         .kpi .left small {
-            color: #64748b;
+            color: #64748b
         }
 
         .icon {
-            width: 65px;
-            height: 65px;
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
             border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
-            font-size: 28px;
+            font-size: 24px
         }
 
-        /* COLORS */
-
         .blue {
-            background: #1976D2;
+            background: #1976D2
         }
 
         .green {
-            background: #2E7D32;
+            background: #2E7D32
         }
 
         .orange {
-            background: #FB8C00;
+            background: #FB8C00
         }
 
         .red {
-            background: #D32F2F;
+            background: #D32F2F
         }
-
-        /* =====================================================
-   DASHBOARD GRID
-===================================================== */
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
             gap: 25px;
             margin-bottom: 25px;
-            align-items: start;
+            align-items: start
         }
-
-        /* =====================================================
-   FINANCIAL SUMMARY
-===================================================== */
 
         .summary-grid {
             display: grid;
-            gap: 18px;
+            gap: 18px
         }
 
         .summary-grid .kpi {
             margin: 0;
-            width: 100%;
+            width: 100%
         }
-
-        /* =====================================================
-   ANALYTICS
-===================================================== */
 
         .analytics-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 20px
         }
 
         .analytics-header small {
-            color: #64748b;
+            color: #64748b
         }
 
         .chart-container {
-            height: 500px;
+            height: 400px;
             background: #fafcff;
             border: 1px solid #edf2f7;
             border-radius: 15px;
-            padding: 15px;
+            padding: 15px
         }
-
-        /* =====================================================
-   FORM
-===================================================== */
 
         input,
         select {
             width: 100%;
-            padding: 13px 15px;
+            padding: 12px 14px;
             border: 1px solid #d9e2ec;
             border-radius: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
             margin-bottom: 15px;
-            font-size: 15px;
-            transition: .3s;
+            font-size: 14px;
+            background: #fff
         }
 
         input:focus,
         select:focus {
             outline: none;
             border-color: #1976D2;
-            box-shadow: 0 0 0 4px rgba(25, 118, 210, .12);
+            box-shadow: 0 0 0 4px #1976d21f
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155
         }
 
         button {
-            width: 100%;
             background: #1976D2;
             color: #fff;
             border: none;
-            padding: 14px;
+            padding: 12px 14px;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: .3s;
+            transition: .2s
         }
 
         button:hover {
-            background: #1565C0;
+            background: #1565C0
         }
-
-        /* =====================================================
-   TABLE
-===================================================== */
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 650px
         }
 
         th {
             background: #eef5fc;
             color: #173F73;
-            padding: 14px;
+            padding: 13px;
             text-align: left;
+            white-space: nowrap
         }
 
         td {
-            padding: 14px;
-            border-bottom: 1px solid #edf2f7;
+            padding: 13px;
+            border-bottom: 1px solid #edf2f7
         }
 
         tr:hover {
-            background: #f8fbff;
+            background: #f8fbff
         }
 
-        /* =====================================================
-   MODALS
-===================================================== */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto
+        }
 
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .55);
+            background: #0009;
             z-index: 9999;
+            overflow-y: auto
         }
 
         .modal-content {
-            width: 90%;
-            max-width: 950px;
-            margin: 45px auto;
+            width: 94%;
+            max-width: 1050px;
+            margin: 35px auto;
             background: #fff;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+            padding: 25px;
+            box-shadow: 0 20px 50px #0004
         }
 
         .close {
@@ -389,566 +359,344 @@
             font-size: 30px;
             cursor: pointer;
             color: #888;
+            line-height: 1
         }
 
         .close:hover {
-            color: #D32F2F;
+            color: #D32F2F
         }
 
-        /* =====================================================
-   RESPONSIVE
-===================================================== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px
+        }
 
-        @media(max-width:1000px) {
+        .muted {
+            color: #64748b;
+            font-size: 13px
+        }
 
+        @media(max-width:1050px) {
             .sidebar {
-                display: none;
-            }
-
-            .main {
-                padding: 20px;
+                width: 210px
             }
 
             .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .analytics-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+                grid-template-columns: 1fr
             }
 
             .kpi-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(190px, 1fr))
+            }
+        }
+
+        @media(max-width:760px) {
+            header {
+                padding: 0 15px
             }
 
+            .logo h2 {
+                font-size: 17px
+            }
+
+            .admin-info {
+                gap: 8px
+            }
+
+            .admin-info small {
+                display: none
+            }
+
+            .avatar {
+                width: 38px;
+                height: 38px
+            }
+
+            .container {
+                display: block
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+                display: flex;
+                overflow-x: auto;
+                align-items: center
+            }
+
+            .sidebar h4 {
+                display: none
+            }
+
+            .sidebar p {
+                white-space: nowrap;
+                padding: 12px
+            }
+
+            .sidebar p:hover {
+                padding-left: 12px
+            }
+
+            .main {
+                padding: 15px
+            }
+
+            .page-title h1 {
+                font-size: 25px
+            }
+
+            .card {
+                padding: 17px
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr
+            }
+
+            .modal-content {
+                padding: 18px;
+                margin: 18px auto
+            }
+
+            .chart-container {
+                height: 300px
+            }
         }
     </style>
-
 </head>
 
 <body>
-
     <header>
-
-        <div class="logo">
-            <i class="fa-solid fa-droplet"></i>
+        <div class="logo"><i class="fa-solid fa-droplet"></i>
             <h2>RPV Water Delivery</h2>
         </div>
-
         <div class="admin-info">
-            <div>
-                <strong>Administrator</strong><br>
-                <small>Business Dashboard</small>
-            </div>
-
-            <div class="avatar">
-                A
-            </div>
+            <div><strong>Administrator</strong><br><small>Business Dashboard</small></div>
+            <div class="avatar">A</div>
         </div>
-
     </header>
-    <!------maint container-->
+
     <div class="container">
-
-        <!-- SIDEBAR -->
-        <div class="sidebar">
-
-
+        <aside class="sidebar">
             <h4>MAIN MENU</h4>
+            <p onclick="location.href='/admin_dashboard'"><i class="fa-solid fa-chart-line"></i>Dashboard</p>
+            <p onclick="openDriverModal()"><i class="fa-solid fa-user-plus"></i>Add Driver</p>
+            <p onclick="openDriverManagementModal()"><i class="fa-solid fa-users-gear"></i>Manage Drivers</p>
+            <p onclick="openStatusModal()"><i class="fa-solid fa-truck-fast"></i>Delivery Status</p>
+            <p onclick="openWalkInModal()"><i class="fa-solid fa-cash-register"></i>Walk-in Customers</p>
+            <p onclick="openModal()"><i class="fa-solid fa-clock-rotate-left"></i>History</p>
+            <p class="logout" onclick="location.href='/logout'"><i class="fa-solid fa-right-from-bracket"></i>Logout</p>
+        </aside>
 
-            <p onclick="location.href='/admin_dashboard'">
-                <i class="fa-solid fa-chart-line"></i>
-                Dashboard
-            </p>
-
-            <p onclick="openDriverModal()">
-                <i class="fa-solid fa-user-plus"></i>
-                Add Driver
-            </p>
-            <p onclick="openDriverManagementModal()">
-                <i class="fa-solid fa-users-gear"></i>
-                Manage Drivers
-            </p>
-
-            <p onclick="openStatusModal()">
-                <i class="fa-solid fa-truck-fast"></i>
-                Delivery Status
-            </p>
-
-            <p onclick="openModal()">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                History
-            </p>
-
-            <p class="logout" onclick="location.href='/logout'">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
-            </p>
-
-
-        </div> <!----side bar end-->
-
-        <!-- MAIN CONTENT -->
-        <div class="main">
-
-            <!-- PAGE TITLE -->
+        <main class="main">
             <div class="page-title">
-                <div>
-                    <h1>Admin Dashboard</h1>
-                    <p>Manage deliveries and monitor business performance.</p>
-                </div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage deliveries and monitor business performance.</p>
             </div>
 
-            <!-- QUICK INSIGHTS -->
-            <div class="card">
-                <h3>
-                    <i class="fa-solid fa-lightbulb"></i>
-                    Quick Insights
-                </h3>
-
+            <section class="card">
+                <h3><i class="fa-solid fa-lightbulb"></i> Quick Insights</h3>
                 <div class="kpi-grid">
-
-                    <!-- Revenue -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Revenue</h5>
-                            <h2>₱{{ total_income }}</h2>
-                            <small style="color:#64748b;">
-                                Total income generated.
-                            </small>
+                            <h2>₱{{ "%.2f"|format(total_income) }}</h2><small>Total income from completed
+                                deliveries.</small>
                         </div>
-
-                        <div class="icon blue">
-                            <i class="fa-solid fa-money-bill-trend-up"></i>
-                        </div>
-
+                        <div class="icon blue"><i class="fa-solid fa-money-bill-trend-up"></i></div>
                     </div>
-
-                    <!-- Fuel -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Fuel Cost</h5>
-                            <h2>₱{{ total_fuel }}</h2>
-                            <small style="color:#dc2626;">
-                                Transportation expenses.
-                            </small>
+                            <h2>₱{{ "%.2f"|format(total_fuel) }}</h2><small>Delivery transportation expenses.</small>
                         </div>
-
-                        <div class="icon red">
-                            <i class="fa-solid fa-gas-pump"></i>
-                        </div>
-
+                        <div class="icon red"><i class="fa-solid fa-gas-pump"></i></div>
                     </div>
-
-                    <!-- Net Profit -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Net Profit</h5>
-                            <h2>₱{{ net_profit }}</h2>
-                            <small style="color:#16a34a;">
-                                Earnings after fuel costs.
-                            </small>
+                            <h2>₱{{ "%.2f"|format(net_profit) }}</h2><small>Income after delivery fuel costs.</small>
                         </div>
-
-                        <div class="icon green">
-                            <i class="fa-solid fa-coins"></i>
-                        </div>
-
+                        <div class="icon green"><i class="fa-solid fa-coins"></i></div>
                     </div>
-
-                    <!-- Completion Rate -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Completion Rate</h5>
-
-                            <h2>
-                                {% if total_deliveries %}
-                                {{ ((completed_deliveries / total_deliveries) * 100)|round(1) }}%
-                                {% else %}
-                                0%
-                                {% endif %}
-                            </h2>
-
-                            <small style="color:#f59e0b;">
-                                Delivery success rate.
-                            </small>
-
+                            <h2>{% if total_deliveries %}{{ ((completed_deliveries / total_deliveries) * 100)|round(1)
+                                }}%{% else %}0%{% endif %}</h2><small>Delivery success rate.</small>
                         </div>
-
-                        <div class="icon orange">
-                            <i class="fa-solid fa-chart-simple"></i>
-                        </div>
-
+                        <div class="icon orange"><i class="fa-solid fa-chart-simple"></i></div>
                     </div>
-
                 </div>
-            </div><!--quick insight end--->
+            </section>
 
-            <!-- Best Peak Month -->
-            <div class="kpi">
-                <div class="left">
-                    <h5>Peak Month</h5>
-                    <h2>{{ peak_month }}</h2>
-                    <small style="color:#1976D2;">
-                        Highest profit month.
-                    </small>
+            <div class="kpi-grid" style="margin-bottom:25px">
+                <div class="kpi">
+                    <div class="left">
+                        <h5>Peak Month</h5>
+                        <h2>{{ peak_month }}</h2><small>Highest profit month.</small>
+                    </div>
+                    <div class="icon blue"><i class="fa-solid fa-arrow-trend-up"></i></div>
                 </div>
-                <div class="icon blue">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
+                <div class="kpi">
+                    <div class="left">
+                        <h5>Lowest Month</h5>
+                        <h2>{{ lowest_month }}</h2><small>Lowest profit month.</small>
+                    </div>
+                    <div class="icon red"><i class="fa-solid fa-arrow-trend-down"></i></div>
                 </div>
-
-            </div>
-            <div class="kpi">
-
-                <div class="left">
-                    <h5>Lowest Month</h5>
-                    <h2>{{ lowest_month }}</h2>
-                    <small style="color:#D32F2F;">
-                        Lowest profit month.
-                    </small>
-                </div>
-
-                <div class="icon red">
-                    <i class="fa-solid fa-arrow-trend-down"></i>
-                </div>
-
             </div>
 
-            <!-- BUSINESS OVERVIEW -->
-            <div class="card">
-                <h3>
-                    <i class="fa-solid fa-chart-pie"></i>
-                    Business Overview
-                </h3>
-
+            <section class="card">
+                <h3><i class="fa-solid fa-chart-pie"></i> Business Overview</h3>
                 <div class="kpi-grid">
-
-                    <!-- Total Deliveries -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Total Deliveries</h5>
-                            <h2>{{ total_deliveries }}</h2>
-                            <small style="color:#6b7280;">
-                                All assigned deliveries
-                            </small>
+                            <h2>{{ total_deliveries }}</h2><small>All assigned deliveries</small>
                         </div>
-
-                        <div class="icon blue">
-                            <i class="fa-solid fa-truck-fast"></i>
-                        </div>
-
+                        <div class="icon blue"><i class="fa-solid fa-truck-fast"></i></div>
                     </div>
-
-                    <!-- Completed -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Completed</h5>
-                            <h2>{{ completed_deliveries }}</h2>
-                            <small style="color:#16a34a;">
-                                Successful deliveries
-                            </small>
+                            <h2>{{ completed_deliveries }}</h2><small>Successful deliveries</small>
                         </div>
-
-                        <div class="icon green">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-
+                        <div class="icon green"><i class="fa-solid fa-circle-check"></i></div>
                     </div>
-
-                    <!-- Pending -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Pending</h5>
-                            <h2>{{ pending_deliveries }}</h2>
-                            <small style="color:#f59e0b;">
-                                Waiting for driver
-                            </small>
+                            <h2>{{ pending_deliveries }}</h2><small>Waiting for driver</small>
                         </div>
-
-                        <div class="icon orange">
-                            <i class="fa-solid fa-clock"></i>
-                        </div>
-
+                        <div class="icon orange"><i class="fa-solid fa-clock"></i></div>
                     </div>
-
-                    <!-- Declined -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Declined</h5>
-                            <h2>{{ declined_deliveries }}</h2>
-                            <small style="color:#ef4444;">
-                                Rejected deliveries
-                            </small>
+                            <h2>{{ declined_deliveries }}</h2><small>Rejected deliveries</small>
                         </div>
-
-                        <div class="icon red">
-                            <i class="fa-solid fa-circle-xmark"></i>
-                        </div>
-
+                        <div class="icon red"><i class="fa-solid fa-circle-xmark"></i></div>
                     </div>
-
-                    <!-- Total Drivers -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Total Drivers</h5>
-                            <h2>{{ total_drivers }}</h2>
-                            <small style="color:#6b7280;">
-                                Registered drivers
-                            </small>
+                            <h2>{{ total_drivers }}</h2><small>Registered drivers</small>
                         </div>
-
-                        <div class="icon blue">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-
+                        <div class="icon blue"><i class="fa-solid fa-users"></i></div>
                     </div>
-
-                    <!-- Customers -->
                     <div class="kpi">
-
                         <div class="left">
                             <h5>Customers</h5>
-                            <h2>{{ total_customers }}</h2>
-                            <small style="color:#6b7280;">
-                                Active customers
-                            </small>
+                            <h2>{{ total_customers }}</h2><small>Customers on delivery records</small>
                         </div>
-
-                        <div class="icon green">
-                            <i class="fa-solid fa-user-group"></i>
-                        </div>
-
+                        <div class="icon green"><i class="fa-solid fa-user-group"></i></div>
                     </div>
-
                 </div>
-            </div><!----business overview end-->
+            </section>
 
-            <!-- ASSIGN DELIVERY + FINANCIAL SUMMARY -->
             <div class="dashboard-grid">
-
-                <!-- LEFT assign delivery-->
-                <div class="card">
-                    <h3>
-                        <i class="fa-solid fa-truck-fast"></i>
-                        Assign New Delivery
-                    </h3>
-
-                    <form method="POST">
-
-                        <label>Customer Name</label>
-                        <input type="text" name="CustomerName" placeholder="Enter customer name" required>
-
-                        <label>Delivery Address</label>
-                        <input type="text" name="location" placeholder="Enter complete delivery address" required>
-
+                <section class="card">
+                    <h3><i class="fa-solid fa-truck-fast"></i> Assign New Delivery</h3>
+                    <form method="POST" action="/admin_dashboard">
+                        <label>Customer Name</label><input type="text" name="CustomerName"
+                            placeholder="Enter customer name" required>
+                        <label>Delivery Address</label><input type="text" name="location"
+                            placeholder="Enter complete delivery address" required>
                         <label>Select Driver</label>
-
                         <select name="driver_id" id="driverSelect" required>
-
-                            <option value="">Choose Driver</option>
-
-                            {% for d in drivers %}
-                            <option value="{{ d.id }}" data-name="{{ d.name }}">
-                                {{ d.name }}
-                            </option>
-                            {% endfor %}
-
+                            <option value="">Choose Driver</option>{% for d in drivers %}<option value="{{ d.id }}"
+                                data-name="{{ d.name }}">{{ d.name }}</option>{% endfor %}
                         </select>
-
                         <input type="hidden" id="driver_name" name="driver_name">
-
-                        <label>Delivery Date</label>
-                        <input type="date" name="delivery_date" required>
-
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-
-                            <div>
-                                <label>Tons</label>
-                                <input type="number" name="tons" placeholder="0" required>
-                            </div>
-
-                            <div>
-                                <label>Price per Ton</label>
-                                <input type="number" name="price" placeholder="₱" required>
-                            </div>
-
+                        <label>Delivery Date</label><input type="date" name="delivery_date" required>
+                        <div class="form-grid">
+                            <div><label>Tons</label><input type="number" name="tons" min="0.01" step="0.01"
+                                    placeholder="0" required></div>
+                            <div><label>Price per Ton</label><input type="number" name="price" min="0" step="0.01"
+                                    placeholder="₱" required></div>
                         </div>
-
-                        <button type="submit">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Assign Delivery
-                        </button>
-
+                        <button type="submit" style="width:100%"><i class="fa-solid fa-paper-plane"></i> Assign
+                            Delivery</button>
                     </form>
-
-
-                </div><!--end of assign-->
-
-                <!-- RIGHT financial summary-->
-                <div class="card">
-                    <h3>
-                        <i class="fa-solid fa-chart-column"></i>
-                        Financial Summary
-                    </h3>
-
+                </section>
+                <section class="card">
+                    <h3><i class="fa-solid fa-chart-column"></i> Financial Summary</h3>
                     <div class="summary-grid">
-
                         <div class="kpi">
-
                             <div class="left">
-                                <h5>Today's Revenue</h5>
-                                <h2>₱{{ daily }}</h2>
+                                <h5>Today's Profit</h5>
+                                <h2>₱{{ "%.2f"|format(daily) }}</h2>
                             </div>
-
-                            <div class="icon blue">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-
+                            <div class="icon blue"><i class="fa-solid fa-wallet"></i></div>
                         </div>
-
                         <div class="kpi">
-
                             <div class="left">
                                 <h5>This Week</h5>
-                                <h2>₱{{ weekly }}</h2>
+                                <h2>₱{{ "%.2f"|format(weekly) }}</h2>
                             </div>
-
-                            <div class="icon green">
-                                <i class="fa-solid fa-calendar-week"></i>
-                            </div>
-
+                            <div class="icon green"><i class="fa-solid fa-calendar-week"></i></div>
                         </div>
-
                         <div class="kpi">
-
                             <div class="left">
                                 <h5>This Month</h5>
-                                <h2>₱{{ monthly }}</h2>
+                                <h2>₱{{ "%.2f"|format(monthly) }}</h2>
                             </div>
-
-                            <div class="icon orange">
-                                <i class="fa-solid fa-calendar-days"></i>
-                            </div>
-
+                            <div class="icon orange"><i class="fa-solid fa-calendar-days"></i></div>
                         </div>
-
                     </div>
+                </section>
+            </div>
 
-                </div><!----end of financial summary-->
-
-
-            </div><!--end of dashboard grid-->
-
-
-            <!-- MONTHLY INCOME AND EXPENSE REPORT -->
-            <div class="card">
-                <h3>
-                    <i class="fa-solid fa-calendar-days"></i>
-                    Monthly Income & Expenses
-                </h3>
-
-                <div
-                    style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px;">
-                    <div>
-                        <label for="reportMonth">Select Month</label>
-                        <select id="reportMonth">
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                            <option value="2">March</option>
-                            <option value="3">April</option>
-                            <option value="4">May</option>
-                            <option value="5">June</option>
-                            <option value="6">July</option>
-                            <option value="7">August</option>
-                            <option value="8">September</option>
-                            <option value="9">October</option>
-                            <option value="10">November</option>
-                            <option value="11">December</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="reportYear">Select Year</label>
-                        <select id="reportYear">
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="reportDay">Select Day</label>
-                        <select id="reportDay">
+            <section class="card">
+                <h3><i class="fa-solid fa-calendar-days"></i> Monthly Income & Expenses</h3>
+                <div class="form-grid">
+                    <div><label for="reportMonth">Select Month</label><select id="reportMonth">{% for m in range(12) %}
+                            <option value="{{ m }}">{{
+                                ["January","February","March","April","May","June","July","August","September","October","November","December"][m]
+                                }}</option>{% endfor %}</select></div>
+                    <div><label for="reportYear">Select Year</label><select id="reportYear"></select></div>
+                    <div><label for="reportDay">Select Day</label><select id="reportDay">
                             <option value="all">All Days</option>
-                        </select>
-                    </div>
+                        </select></div>
                 </div>
-
-                <div class="kpi-grid" style="margin-bottom:25px;">
+                <div class="kpi-grid" style="margin:10px 0 25px">
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Income</h5>
-                            <h2 id="monthlyIncome">₱0.00</h2>
-                            <small>Completed deliveries only</small>
+                            <h2 id="monthlyIncome">₱0.00</h2><small>Completed deliveries only</small>
                         </div>
-                        <div class="icon green">
-                            <i class="fa-solid fa-money-bill-wave"></i>
-                        </div>
+                        <div class="icon green"><i class="fa-solid fa-money-bill-wave"></i></div>
                     </div>
-
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Expenses</h5>
-                            <h2 id="monthlyExpenses">₱0.00</h2>
-                            <small>Completed delivery fuel costs</small>
+                            <h2 id="monthlyExpenses">₱0.00</h2><small>Completed delivery fuel costs</small>
                         </div>
-                        <div class="icon red">
-                            <i class="fa-solid fa-gas-pump"></i>
-                        </div>
+                        <div class="icon red"><i class="fa-solid fa-gas-pump"></i></div>
                     </div>
-
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Deliveries</h5>
-                            <h2 id="monthlyDeliveries">0</h2>
-                            <small>Assigned deliveries</small>
+                            <h2 id="monthlyDeliveries">0</h2><small>Assigned deliveries</small>
                         </div>
-                        <div class="icon orange">
-                            <i class="fa-solid fa-truck-fast"></i>
-                        </div>
+                        <div class="icon orange"><i class="fa-solid fa-truck-fast"></i></div>
                     </div>
-
                     <div class="kpi">
                         <div class="left">
                             <h5>Net Profit</h5>
-                            <h2 id="monthlyProfit">₱0.00</h2>
-                            <small>Income minus expenses</small>
+                            <h2 id="monthlyProfit">₱0.00</h2><small>Income minus fuel expenses</small>
                         </div>
-                        <div class="icon blue">
-                            <i class="fa-solid fa-coins"></i>
-                        </div>
+                        <div class="icon blue"><i class="fa-solid fa-coins"></i></div>
                     </div>
                 </div>
-
                 <h3 id="reportBreakdownTitle">Daily Breakdown</h3>
-
-                <div style="overflow-x:auto;">
+                <div class="table-wrap">
                     <table>
                         <thead>
                             <tr>
@@ -960,11 +708,9 @@
                                 <th>Net Profit</th>
                             </tr>
                         </thead>
-
                         <tbody id="monthlyReportBody"></tbody>
-
                         <tfoot>
-                            <tr style="font-weight:bold;background:#eef5fc;">
+                            <tr style="font-weight:bold;background:#eef5fc">
                                 <td colspan="2">TOTAL</td>
                                 <td id="reportTotalDeliveries">0</td>
                                 <td id="reportTotalIncome">₱0.00</td>
@@ -974,799 +720,410 @@
                         </tfoot>
                     </table>
                 </div>
-
-                <!-- Records supplied by Flask -->
-                <div id="monthlyReportData" hidden>
-                    {% for h in history %}
-                    <div class="report-record" data-date="{{ h.get('delivery_date', '') }}"
+                <div id="monthlyReportData" hidden>{% for h in history %}<div class="report-record"
+                        data-date="{{ h.get('date', h.get('delivery_date', '')) }}"
                         data-customer="{{ h.get('Customer_Name', 'Unknown') }}"
                         data-income="{{ h.get('total_price', 0) }}" data-expense="{{ h.get('fuel_cost', 0) }}"
-                        data-status="{{ h.get('status', '') }}">
+                        data-status="{{ h.get('status', '') }}"></div>{% endfor %}</div>
+            </section>
+
+            <section class="card">
+                <div class="analytics-header">
+                    <div>
+                        <h3><i class="fa-solid fa-chart-line"></i> Revenue & Profit Analytics</h3><small>Business
+                            performance over time</small>
+                    </div><select id="chartType" style="width:140px;margin:0">
+                        <option value="line">Line</option>
+                        <option value="bar">Bar</option>
+                        <option value="pie">Pie</option>
+                    </select>
+                </div>
+                <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- WALK-IN CUSTOMER MODAL -->
+    <div id="walkInModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWalkInModal()">&times;</span>
+            <h3><i class="fa-solid fa-cash-register"></i> Walk-in Customers</h3>
+            <div style="background:#f4f7fb;padding:20px;border-radius:14px;margin-bottom:25px">
+                <h3>Record Walk-in Transaction</h3>
+                <form method="POST" action="/add_walk_in_sale">
+                    <label>Customer Name</label><input type="text" name="customer_name"
+                        placeholder="Enter customer name" required>
+                    <div class="form-grid">
+                        <div><label>Water Quantity (Tons)</label><input type="number" name="tons" min="0.01" step="0.01"
+                                placeholder="Enter quantity" required></div>
+                        <div><label>Price per Ton (₱)</label><input type="number" name="price" min="0" step="0.01"
+                                placeholder="Enter price" required></div>
                     </div>
-                    {% endfor %}
-                </div>
+                    <p class="muted" style="margin-bottom:12px">Transaction number and date are generated automatically.
+                        No expenses are recorded for walk-in sales.</p>
+                    <button type="submit" style="width:100%"><i class="fa-solid fa-plus"></i> Save Walk-in
+                        Transaction</button>
+                </form>
             </div>
-
-
-            <!-- Data source: existing delivery history -->
-            <div id="monthlyReportData" hidden>
-                {% for h in history %}
-                <div class="report-record" data-date="{{ h.get('delivery_date', '') }}"
-                    data-income="{{ h.get('total_price', 0) }}" data-expense="{{ h.get('fuel_cost', 0) }}"
-                    data-status="{{ h.get('status', '') }}">
-                </div>
-                {% endfor %}
+            <h3>Customer List</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Transactions</th>
+                            <th>Total Income</th>
+                            <th>Total Profit</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in walk_in_customers %}
+                        <tr>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.transaction_count }}</td>
+                            <td>₱{{ "%.2f"|format(c.total_income) }}</td>
+                            <td style="color:#2E7D32;font-weight:600">₱{{ "%.2f"|format(c.total_profit) }}</td>
+                            <td><button type="button" data-customer-key="{{ c.key }}" data-customer-name="{{ c.name }}"
+                                    onclick="openWalkInCustomer(this)">View Transactions</button></td>
+                        </tr>
+                        {% else %}<tr>
+                            <td colspan="5" style="text-align:center">No walk-in customers recorded yet.</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <!-- ANALYTICS -->
-        <div class="card">
-
-            <div class="analytics-header">
-
-                <div>
-
-                    <h3>
-                        <i class="fa-solid fa-chart-line"></i>
-                        Revenue & Profit Analytics
-                    </h3>
-
-                    <small style="color:#64748b;">
-                        Business performance over time
-                    </small>
-
-                </div>
-
-                <select id="chartType" style="width:140px;margin:0;">
-                    <option value="line">📈 Line</option>
-                    <option value="bar">📊 Bar</option>
-                    <option value="pie">🥧 Pie</option>
-                </select>
-
-            </div>
-
-            <div class="chart-container">
-                <canvas id="analyticsChart"></canvas>
-            </div>
-
-        </div>
-
-
     </div>
-    <!-- END MAIN -->
 
-    <!-----MODALS-->
+    <!-- CUSTOMER TRANSACTION HISTORY -->
+    <div id="walkInCustomerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWalkInCustomerModal()">&times;</span>
+            <h3><i class="fa-solid fa-user"></i> Customer: <span id="walkInSelectedCustomer"></span></h3>
+            <div class="kpi-grid" style="margin-bottom:25px">
+                <div class="kpi">
+                    <div class="left">
+                        <h5>Total Transactions</h5>
+                        <h2 id="walkInTransactionCount">0</h2>
+                    </div>
+                    <div class="icon blue"><i class="fa-solid fa-receipt"></i></div>
+                </div>
+                <div class="kpi">
+                    <div class="left">
+                        <h5>Total Income</h5>
+                        <h2 id="walkInTotalIncome">₱0.00</h2>
+                    </div>
+                    <div class="icon green"><i class="fa-solid fa-money-bill-wave"></i></div>
+                </div>
+                <div class="kpi">
+                    <div class="left">
+                        <h5>Total Profit</h5>
+                        <h2 id="walkInTotalProfit">₱0.00</h2>
+                    </div>
+                    <div class="icon blue"><i class="fa-solid fa-coins"></i></div>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction No.</th>
+                            <th>Date</th>
+                            <th>Water Quantity</th>
+                            <th>Price per Ton</th>
+                            <th>Income</th>
+                            <th>Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="walkInTransactionBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="walkInTransactionData" hidden>{% for sale in walk_in_sales %}<div class="walk-in-record"
+            data-customer-key="{{ sale.customer_key }}" data-customer-name="{{ sale.customer_name }}"
+            data-transaction-no="{{ sale.transaction_no }}" data-date="{{ sale.date }}"
+            data-tons="{{ sale.water_tons }}" data-price="{{ sale.price_per_ton }}"
+            data-income="{{ sale.total_income }}" data-profit="{{ sale.profit }}"></div>{% endfor %}</div>
 
-    <!-- ==========================================
-         DELIVERY STATUS MODAL
-    =========================================== -->
+    <!-- DELIVERY STATUS MODAL -->
     <div id="statusModal" class="modal">
-
         <div class="modal-content">
-
-            <span class="close" onclick="closeStatusModal()">
-                &times;
-            </span>
-
-            <h3>📋 Delivery Status</h3>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Customer</th>
-                        <th>Driver</th>
-                        <th>Delivery Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for d in deliveries %}
-
-                    <tr>
-
-                        <td>{{ d.get('Customer_Name','-') }}</td>
-
-                        <td>{{ d.get('driver_name','-') }}</td>
-
-                        <td>{{ d.get('delivery_date','-') }}</td>
-
-                        <td>
-
-                            {% if d.get('status') == 'Accepted' %}
-
-                            <span style="
-                                background:#10b981;
-                                color:white;
-                                padding:6px 12px;
-                                border-radius:8px;
-                            ">
-                                ✅ Accepted
-                            </span>
-
-                            {% elif d.get('status') == 'Declined' %}
-
-                            <span style="
-                                background:#ef4444;
-                                color:white;
-                                padding:6px 12px;
-                                border-radius:8px;
-                            ">
-                                ❌ Declined
-                            </span>
-
-                            {% else %}
-
-                            <span style="
-                                background:#f59e0b;
-                                color:white;
-                                padding:6px 12px;
-                                border-radius:8px;
-                            ">
-                                ⏳ Pending
-                            </span>
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            <span class="close" onclick="closeStatusModal()">&times;</span>
+            <h3><i class="fa-solid fa-truck-fast"></i> Delivery Status</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Driver</th>
+                            <th>Delivery Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in deliveries %}<tr>
+                            <td>{{ d.get('Customer_Name','-') }}</td>
+                            <td>{{ d.get('driver_name','-') }}</td>
+                            <td>{{ d.get('delivery_date','-') }}</td>
+                            <td>{{ d.get('status','pending')|capitalize }}</td>
+                        </tr>{% else %}<tr>
+                            <td colspan="4">No active deliveries.</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 
-    <!-- ==========================================
-         ADD DRIVER MODAL
-    =========================================== -->
+    <!-- ADD DRIVER MODAL -->
     <div id="driverModal" class="modal">
-
-        <div class="modal-content" style="max-width:400px;">
-
-            <span class="close" onclick="closeDriverModal()">
-                &times;
-            </span>
-
-            <h3>
-                <i class="fa-solid fa-user-plus"></i>
-                Add Driver
-            </h3>
-
-            <form method="POST" action="/add_driver">
-
-                <input type="text" name="name" placeholder="Full Name" required>
-
-                <input type="text" name="address" placeholder="Address" required>
-
-                <input type="text" name="contact" placeholder="Contact Number" required>
-
-                <button type="submit">
-                    Register Driver
-                </button>
-
-            </form>
-
+        <div class="modal-content" style="max-width:450px">
+            <span class="close" onclick="closeDriverModal()">&times;</span>
+            <h3><i class="fa-solid fa-user-plus"></i> Add Driver</h3>
+            <form method="POST" action="/add_driver"><label>Full Name</label><input type="text" name="name"
+                    placeholder="Full Name" required><label>Address</label><input type="text" name="address"
+                    placeholder="Address" required><label>Contact Number</label><input type="text" name="contact"
+                    placeholder="Contact Number" required><button type="submit" style="width:100%">Register
+                    Driver</button></form>
         </div>
-
-
     </div>
-    <!-- ==========================================
-     DRIVER MANAGEMENT MODAL
-=========================================== -->
+
+    <!-- DRIVER MANAGEMENT MODAL -->
     <div id="driverManagementModal" class="modal">
-
         <div class="modal-content">
-
-            <span class="close" onclick="closeDriverManagementModal()">
-                &times;
-            </span>
-
-            <h3>
-                <i class="fa-solid fa-users-gear"></i>
-                Manage Drivers
-            </h3>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Driver Name</th>
-                        <th>Address</th>
-                        <th>Contact</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for d in drivers %}
-
-                    <tr>
-
-                        <td>{{ d.get('name', '-') }}</td>
-
-                        <td>{{ d.get('address', '-') }}</td>
-
-                        <td>{{ d.get('contact', '-') }}</td>
-
-                        <td>
-
-                            <form method="POST" action="/delete_driver"
-                                onsubmit="return confirm('Are you sure you want to delete this driver account? This action cannot be undone.');">
-
-                                <input type="hidden" name="driver_id" value="{{ d.id }}">
-
-                                <button type="submit" style="
-                                    width:auto;
-                                    background:#D32F2F;
-                                    padding:9px 14px;
-                                    margin:0;
-                                    ">
-
-                                    <i class="fa-solid fa-trash"></i>
-                                    Delete
-
-                                </button>
-
-                            </form>
-
-                        </td>
-
-                    </tr>
-
-                    {% else %}
-
-                    <tr>
-                        <td colspan="4" style="text-align:center;">
-                            No registered drivers.
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            <span class="close" onclick="closeDriverManagementModal()">&times;</span>
+            <h3><i class="fa-solid fa-users-gear"></i> Manage Drivers</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Driver Name</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in drivers %}<tr>
+                            <td>{{ d.get('name','-') }}</td>
+                            <td>{{ d.get('address','-') }}</td>
+                            <td>{{ d.get('contact','-') }}</td>
+                            <td>
+                                <form method="POST" action="/delete_driver"
+                                    onsubmit="return confirm('Delete this driver account? Active assignments will also be removed.');">
+                                    <input type="hidden" name="driver_id" value="{{ d.id }}"><button type="submit"
+                                        style="background:#D32F2F">Delete</button></form>
+                            </td>
+                        </tr>{% else %}<tr>
+                            <td colspan="4" style="text-align:center">No registered drivers.</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
-    <!-- ==========================================
-         DELIVERY HISTORY MODAL
-    =========================================== -->
+
+    <!-- DELIVERY HISTORY MODAL -->
     <div id="modal" class="modal">
-
         <div class="modal-content">
-
-            <span class="close" onclick="closeModal()">
-                &times;
-            </span>
-
-            <h3>📜 Delivery History</h3>
-
-            <input id="search" type="text" placeholder="Search..." onkeyup="search()">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>Customer</th>
-                        <th>Location</th>
-                        <th>Driver</th>
-                        <th>Assigned Date</th>
-                        <th>Delivery Date</th>
-                        <th>Income</th>
-                        <th>Profit</th>
-                    </tr>
-
-                </thead>
-
-                <tbody id="table">
-
-                    {% for h in history %}
-
-                    <tr>
-
-                        <td>{{ h.get('Customer_Name', 'N/A') }}</td>
-
-                        <td>{{ h.get('location', '-') }}</td>
-
-                        <td>{{ h.get('driver_name', '-') }}</td>
-
-                        <td>{{ h.get('date_assigned', '-') }}</td>
-
-                        <td>{{ h.get('delivery_date', '-') }}</td>
-
-                        <td>
-                            ₱{{ h.get('total_price', 0) }}
-                        </td>
-
-                        <td style="color:#10b981;font-weight:bold;">
-                            ₱{{ h.get('profit', 0) }}
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Delivery History</h3>
+            <input id="search" type="text" placeholder="Search customer, location, or driver..."
+                oninput="searchHistory()">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Driver</th>
+                            <th>Assigned Date</th>
+                            <th>Delivery Date</th>
+                            <th>Income</th>
+                            <th>Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTable">
+                        {% for h in history %}<tr>
+                            <td>{{ h.get('Customer_Name','N/A') }}</td>
+                            <td>{{ h.get('location','-') }}</td>
+                            <td>{{ h.get('driver_name','-') }}</td>
+                            <td>{{ h.get('date_assigned','-') }}</td>
+                            <td>{{ h.get('delivery_date', h.get('date','-')) }}</td>
+                            <td>₱{{ h.get('total_price',0) }}</td>
+                            <td style="color:#10b981;font-weight:bold">₱{{ h.get('profit',0) }}</td>
+                        </tr>{% else %}<tr>
+                            <td colspan="7" style="text-align:center">No completed delivery history.</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
-
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
 
     <script>
-
-        // =========================
-        // DRIVER NAME
-        // =========================
-        document.getElementById("driverSelect").addEventListener("change", function () {
-
-            const selectedOption = this.options[this.selectedIndex];
-
-            document.getElementById("driver_name").value =
-                selectedOption.getAttribute("data-name");
-
-        });
-
-        // =========================
-        // HISTORY MODAL
-        // =========================
-        function openModal() {
-            document.getElementById("modal").style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById("modal").style.display = "none";
-        }
-
-        // =========================
-        // DRIVER MODAL
-        // =========================
-        function openDriverModal() {
-            document.getElementById("driverModal").style.display = "block";
-        }
-
-        function closeDriverModal() {
-            document.getElementById("driverModal").style.display = "none";
-        }
-        function openDriverManagementModal() {
-            document.getElementById("driverManagementModal").style.display = "block";
-        }
-
-        function closeDriverManagementModal() {
-            document.getElementById("driverManagementModal").style.display = "none";
-        }
-
-        // =========================
-        // DELIVERY STATUS MODAL
-        // =========================
-        function openStatusModal() {
-            document.getElementById("statusModal").style.display = "block";
-        }
-
-        function closeStatusModal() {
-            document.getElementById("statusModal").style.display = "none";
-        }
-
-        // =========================
-        // HISTORY SEARCH
-        // =========================
-        function search() {
-
-            let val = document
-                .getElementById("search")
-                .value
-                .toLowerCase();
-
-            let rows = document.querySelectorAll("#table tr");
-
-            rows.forEach(row => {
-
-                row.style.display =
-                    row.innerText.toLowerCase().includes(val)
-                        ? ""
-                        : "none";
-
+        const driverSelect = document.getElementById("driverSelect");
+        if (driverSelect) {
+            driverSelect.addEventListener("change", function () {
+                const option = this.options[this.selectedIndex];
+                document.getElementById("driver_name").value = option.getAttribute("data-name") || "";
             });
-
         }
-
-        // =========================
-        // CLOSE MODALS
-        // =========================
-        window.onclick = function (event) {
-
-            if (event.target.className === "modal") {
+        function openModal() { document.getElementById("modal").style.display = "block" }
+        function closeModal() { document.getElementById("modal").style.display = "none" }
+        function openDriverModal() { document.getElementById("driverModal").style.display = "block" }
+        function closeDriverModal() { document.getElementById("driverModal").style.display = "none" }
+        function openDriverManagementModal() { document.getElementById("driverManagementModal").style.display = "block" }
+        function closeDriverManagementModal() { document.getElementById("driverManagementModal").style.display = "none" }
+        function openStatusModal() { document.getElementById("statusModal").style.display = "block" }
+        function closeStatusModal() { document.getElementById("statusModal").style.display = "none" }
+        function openWalkInModal() { document.getElementById("walkInModal").style.display = "block" }
+        function closeWalkInModal() { document.getElementById("walkInModal").style.display = "none" }
+        function closeWalkInCustomerModal() { document.getElementById("walkInCustomerModal").style.display = "none" }
+        function searchHistory() {
+            const value = document.getElementById("search").value.toLowerCase();
+            document.querySelectorAll("#historyTable tr").forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+            });
+        }
+        window.addEventListener("click", event => {
+            if (event.target.classList && event.target.classList.contains("modal")) {
                 event.target.style.display = "none";
             }
-
-        };
-
-        // =========================
-        // CHART.JS
-        // =========================
-        const ctx = document.getElementById("analyticsChart");
-
-        const chartData = {
-
-            labels: {{ chart_labels | tojson }},
-
-        datasets: [{
-
-            label: "Net Profit",
-
-            data: {{ chart_values | tojson }},
-
-            borderColor: "#2563eb",
-
-            backgroundColor: [
-            "#2563eb",
-            "#16a34a",
-            "#f59e0b",
-            "#dc2626",
-            "#7c3aed",
-            "#0891b2",
-            "#ea580c",
-            "#db2777"
-        ],
-
-            fill: true,
-            tension: 0.4,
-            borderWidth: 3
-
-                }]
-
-            };
-
-        let analyticsChart = new Chart(ctx, {
-
-            type: "line",
-
-            data: chartData,
-
-            options: getOptions("line")
         });
+        function money(value) { return "₱" + Number(value || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
 
-        function getOptions(type) {
-
-            return {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-
-                        position: "top"
-
-                    }
-
-                },
-
-                scales: type === "pie"
-                    ? {}
-                    : {
-
-                        y: {
-
-                            beginAtZero: true
-
-                        },
-
-                        x: {
-
-                            grid: {
-
-                                display: false
-
-                            }
-
-                        }
-
-                    }
-
-            };
-
+        // Walk-in customer transaction details
+        function openWalkInCustomer(button) {
+            const key = button.dataset.customerKey;
+            const name = button.dataset.customerName;
+            const records = Array.from(document.querySelectorAll("#walkInTransactionData .walk-in-record"))
+                .filter(record => record.dataset.customerKey === key);
+            const tbody = document.getElementById("walkInTransactionBody");
+            tbody.replaceChildren();
+            let incomeTotal = 0, profitTotal = 0;
+            records.forEach(record => {
+                const income = Number(record.dataset.income) || 0;
+                const profit = Number(record.dataset.profit) || 0;
+                incomeTotal += income; profitTotal += profit;
+                const row = document.createElement("tr");
+                [
+                    record.dataset.transactionNo || "-",
+                    record.dataset.date || "-",
+                    (Number(record.dataset.tons) || 0).toLocaleString("en-PH") + " tons",
+                    money(record.dataset.price),
+                    money(income),
+                    money(profit)
+                ].forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell) });
+                row.lastElementChild.style.color = "#2E7D32";
+                row.lastElementChild.style.fontWeight = "600";
+                tbody.appendChild(row);
+            });
+            document.getElementById("walkInSelectedCustomer").textContent = name;
+            document.getElementById("walkInTransactionCount").textContent = records.length;
+            document.getElementById("walkInTotalIncome").textContent = money(incomeTotal);
+            document.getElementById("walkInTotalProfit").textContent = money(profitTotal);
+            document.getElementById("walkInCustomerModal").style.display = "block";
         }
 
-        document.getElementById("chartType").addEventListener("change", function () {
-
-            analyticsChart.destroy();
-
-            analyticsChart = new Chart(ctx, {
-
-                type: this.value,
-
-                data: chartData,
-
-                options: getOptions(this.value)
-
-            });
-
-        });
-
-
-        function money(value) {
-            return "₱" + Number(value || 0).toLocaleString("en-PH", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-        }
-
+        // Monthly delivery report
         const reportMonth = document.getElementById("reportMonth");
         const reportYear = document.getElementById("reportYear");
         const reportDay = document.getElementById("reportDay");
 
-        function initializeMonthlyReport() {
-            const years = new Set([new Date().getFullYear()]);
-
-            document.querySelectorAll(
-                "#monthlyReportData .report-record"
-            ).forEach(record => {
-                const match = (record.dataset.date || "").match(/^(\d{4})-/);
-
-                if (match) years.add(Number(match[1]));
-            });
-
-            reportYear.innerHTML = "";
-
-            [...years].sort((a, b) => b - a).forEach(year => {
-                const option = document.createElement("option");
-                option.value = year;
-                option.textContent = year;
-                reportYear.appendChild(option);
-            });
-
-            reportMonth.value = new Date().getMonth();
-
-            updateAvailableDays();
-        }
-
         function updateAvailableDays() {
-            const month = Number(reportMonth.value);
-            const year = Number(reportYear.value);
-            const previousDay = reportDay.value || "all";
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            reportDay.innerHTML = "";
-
-            const allOption = document.createElement("option");
-            allOption.value = "all";
-            allOption.textContent = "All Days";
-            reportDay.appendChild(allOption);
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const option = document.createElement("option");
-                option.value = day;
-                option.textContent = "Day " + day;
-                reportDay.appendChild(option);
-            }
-
-            reportDay.value =
-                previousDay !== "all" && Number(previousDay) <= daysInMonth
-                    ? previousDay
-                    : "all";
-
+            const month = Number(reportMonth.value), year = Number(reportYear.value);
+            const previous = reportDay.value || "all";
+            const count = new Date(year, month + 1, 0).getDate();
+            reportDay.replaceChildren();
+            const all = document.createElement("option"); all.value = "all"; all.textContent = "All Days"; reportDay.appendChild(all);
+            for (let day = 1; day <= count; day++) { const option = document.createElement("option"); option.value = day; option.textContent = "Day " + day; reportDay.appendChild(option) }
+            reportDay.value = (previous !== "all" && Number(previous) <= count) ? previous : "all";
             updateMonthlyReport();
         }
-
         function updateMonthlyReport() {
-            const month = Number(reportMonth.value);
-            const year = Number(reportYear.value);
-            const selectedDay = reportDay.value;
-
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            const days = Array.from({ length: daysInMonth }, () => ({
-                customers: [],
-                deliveries: 0,
-                income: 0,
-                expense: 0
-            }));
-
-            document.querySelectorAll(
-                "#monthlyReportData .report-record"
-            ).forEach(record => {
-                const match = (record.dataset.date || "")
-                    .match(/^(\d{4})-(\d{2})-(\d{2})/);
-
+            const month = Number(reportMonth.value), year = Number(reportYear.value), selected = reportDay.value;
+            const count = new Date(year, month + 1, 0).getDate();
+            const days = Array.from({ length: count }, () => ({ customers: [], deliveries: 0, income: 0, expense: 0 }));
+            document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
+                const match = (record.dataset.date || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
                 if (!match) return;
-
-                const recordYear = Number(match[1]);
-                const recordMonth = Number(match[2]) - 1;
-                const day = Number(match[3]);
-
-                if (recordYear !== year || recordMonth !== month) return;
-                if (day < 1 || day > daysInMonth) return;
-
-                const status = (record.dataset.status || "")
-                    .trim().toLowerCase();
-
+                const y = Number(match[1]), m = Number(match[2]) - 1, d = Number(match[3]);
+                if (y !== year || m !== month || d < 1 || d > count) return;
+                const daily = days[d - 1], status = (record.dataset.status || "").trim().toLowerCase();
                 const customer = record.dataset.customer || "Unknown";
-                const income = Number(record.dataset.income) || 0;
-                const expense = Number(record.dataset.expense) || 0;
-
-                const daily = days[day - 1];
-
                 daily.deliveries++;
-
-                if (!daily.customers.includes(customer)) {
-                    daily.customers.push(customer);
-                }
-
-                // Only completed deliveries count as income and expenses.
+                if (!daily.customers.includes(customer)) daily.customers.push(customer);
                 if (["done", "completed"].includes(status)) {
-                    daily.income += income;
-                    daily.expense += expense;
+                    daily.income += Number(record.dataset.income) || 0;
+                    daily.expense += Number(record.dataset.expense) || 0;
                 }
             });
-
-            const tbody = document.getElementById("monthlyReportBody");
-            tbody.replaceChildren();
-
-            let totalIncome = 0;
-            let totalExpense = 0;
-            let totalDeliveries = 0;
-
+            const tbody = document.getElementById("monthlyReportBody"); tbody.replaceChildren();
+            let incomeTotal = 0, expenseTotal = 0, deliveryTotal = 0;
             days.forEach((daily, index) => {
-                const dayNumber = index + 1;
-
-                if (selectedDay !== "all" &&
-                    dayNumber !== Number(selectedDay)) {
-                    return;
-                }
-
-                totalIncome += daily.income;
-                totalExpense += daily.expense;
-                totalDeliveries += daily.deliveries;
-
-                const date = String(dayNumber).padStart(2, "0") + " " +
-                    new Date(year, month, dayNumber).toLocaleString(
-                        "en", { month: "short" }
-                    );
-
-                const tr = document.createElement("tr");
-
-                const values = [
-                    date,
-                    daily.customers.length
-                        ? daily.customers.join(", ")
-                        : "—",
-                    daily.deliveries,
-                    money(daily.income),
-                    money(daily.expense),
-                    money(daily.income - daily.expense)
-                ];
-
-                values.forEach(value => {
-                    const td = document.createElement("td");
-                    td.textContent = value;
-                    tr.appendChild(td);
-                });
-
-                tr.lastElementChild.style.color =
-                    daily.income - daily.expense < 0
-                        ? "#D32F2F"
-                        : "#2E7D32";
-
-                tbody.appendChild(tr);
+                const day = index + 1;
+                if (selected !== "all" && day !== Number(selected)) return;
+                incomeTotal += daily.income; expenseTotal += daily.expense; deliveryTotal += daily.deliveries;
+                const date = String(day).padStart(2, "0") + " " + new Date(year, month, day).toLocaleString("en", { month: "short" });
+                const row = document.createElement("tr");
+                [date, daily.customers.length ? daily.customers.join(", ") : "—", daily.deliveries, money(daily.income), money(daily.expense), money(daily.income - daily.expense)]
+                    .forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell) });
+                row.lastElementChild.style.color = daily.income - daily.expense < 0 ? "#D32F2F" : "#2E7D32";
+                tbody.appendChild(row);
             });
-
-            document.getElementById("reportBreakdownTitle").textContent =
-                selectedDay === "all"
-                    ? "Daily Breakdown"
-                    : "Report for Day " + selectedDay;
-
-            document.getElementById("monthlyIncome").textContent =
-                money(totalIncome);
-
-            document.getElementById("monthlyExpenses").textContent =
-                money(totalExpense);
-
-            document.getElementById("monthlyProfit").textContent =
-                money(totalIncome - totalExpense);
-
-            document.getElementById("monthlyDeliveries").textContent =
-                totalDeliveries;
-
-            document.getElementById("reportTotalDeliveries").textContent =
-                totalDeliveries;
-
-            document.getElementById("reportTotalIncome").textContent =
-                money(totalIncome);
-
-            document.getElementById("reportTotalExpenses").textContent =
-                money(totalExpense);
-
-            document.getElementById("reportTotalProfit").textContent =
-                money(totalIncome - totalExpense);
+            document.getElementById("reportBreakdownTitle").textContent = selected === "all" ? "Daily Breakdown" : "Report for Day " + selected;
+            document.getElementById("monthlyIncome").textContent = money(incomeTotal);
+            document.getElementById("monthlyExpenses").textContent = money(expenseTotal);
+            document.getElementById("monthlyProfit").textContent = money(incomeTotal - expenseTotal);
+            document.getElementById("monthlyDeliveries").textContent = deliveryTotal;
+            document.getElementById("reportTotalDeliveries").textContent = deliveryTotal;
+            document.getElementById("reportTotalIncome").textContent = money(incomeTotal);
+            document.getElementById("reportTotalExpenses").textContent = money(expenseTotal);
+            document.getElementById("reportTotalProfit").textContent = money(incomeTotal - expenseTotal);
         }
-
+        function initializeMonthlyReport() {
+            const years = new Set([new Date().getFullYear()]);
+            document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
+                const match = (record.dataset.date || "").match(/^(\d{4})-/);
+                if (match) years.add(Number(match[1]));
+            });
+            reportYear.replaceChildren();
+            [...years].sort((a, b) => b - a).forEach(year => { const option = document.createElement("option"); option.value = year; option.textContent = year; reportYear.appendChild(option) });
+            reportMonth.value = new Date().getMonth();
+            updateAvailableDays();
+        }
         reportMonth.addEventListener("change", updateAvailableDays);
         reportYear.addEventListener("change", updateAvailableDays);
         reportDay.addEventListener("change", updateMonthlyReport);
-
         initializeMonthlyReport();
 
-    </script>
-
-    <!-- =========================
-         FIREBASE REALTIME
-    ========================== -->
-
-    <script type="module">
-
-        import { initializeApp }
-            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-        import {
-            getFirestore,
-            collection,
-            onSnapshot
+        // Chart.js analytics
+        const chartCanvas = document.getElementById("analyticsChart");
+        const chartData = {
+            labels: {{ chart_labels | tojson }},
+        datasets: [{
+            label: "Net Profit",
+            data: {{ chart_values | tojson }},
+            borderColor: "#2563eb",
+            backgroundColor: ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed", "#0891b2", "#ea580c", "#db2777"],
+            fill: true, tension: .4, borderWidth: 3
+  }]
+};
+        function chartOptions(type) {
+            return {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top" } },
+                scales: type === "pie" ? {} : { y: { beginAtZero: true }, x: { grid: { display: false } } }
+            };
         }
-            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        const firebaseConfig = {
-
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID"
-
-        };
-
-        const app = initializeApp(firebaseConfig);
-
-        const db = getFirestore(app);
-
-        // IMPORTANT:
-        // Only runs if deliveryTableBody exists.
-        const table = document.getElementById("deliveryTableBody");
-
-        if (table) {
-
-            onSnapshot(collection(db, "deliveries"), (snapshot) => {
-
-                table.innerHTML = "";
-
-                snapshot.forEach((doc) => {
-
-                    const delivery = doc.data();
-
-                    table.innerHTML += `
-                        <tr>
-                            <td>${delivery.customer_name ?? "-"}</td>
-                            <td>${delivery.driver_name ?? "-"}</td>
-                            <td>${delivery.status ?? "-"}</td>
-                            <td>${delivery.date ?? "-"}</td>
-                        </tr>
-                    `;
-
-                });
-
-            });
-
-        }
-
+        let analyticsChart = new Chart(chartCanvas, { type: "line", data: chartData, options: chartOptions("line") });
+        document.getElementById("chartType").addEventListener("change", function () {
+            analyticsChart.destroy();
+            analyticsChart = new Chart(chartCanvas, { type: this.value, data: chartData, options: chartOptions(this.value) });
+        });
     </script>
-
 </body>
 
 </html>
