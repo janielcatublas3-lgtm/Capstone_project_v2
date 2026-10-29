@@ -659,7 +659,8 @@
                     <div><label for="reportMonth">Select Month</label><select id="reportMonth">{% for m in range(12) %}
                             <option value="{{ m }}">{{
                                 ["January","February","March","April","May","June","July","August","September","October","November","December"][m]
-                                }}</option>{% endfor %}</select></div>
+                                }}</option>{% endfor %}
+                        </select></div>
                     <div><label for="reportYear">Select Year</label><select id="reportYear"></select></div>
                     <div><label for="reportDay">Select Day</label><select id="reportDay">
                             <option value="all">All Days</option>
@@ -721,7 +722,7 @@
                     </table>
                 </div>
                 <div id="monthlyReportData" hidden>{% for h in history %}<div class="report-record"
-                        data-date="{{ h.get('date', h.get('delivery_date', '')) }}"
+                        data-date="{{ h.get('delivery_date', '') }}"
                         data-customer="{{ h.get('Customer_Name', 'Unknown') }}"
                         data-income="{{ h.get('total_price', 0) }}" data-expense="{{ h.get('fuel_cost', 0) }}"
                         data-status="{{ h.get('status', '') }}"></div>{% endfor %}</div>
@@ -914,7 +915,8 @@
                                 <form method="POST" action="/delete_driver"
                                     onsubmit="return confirm('Delete this driver account? Active assignments will also be removed.');">
                                     <input type="hidden" name="driver_id" value="{{ d.id }}"><button type="submit"
-                                        style="background:#D32F2F">Delete</button></form>
+                                        style="background:#D32F2F">Delete</button>
+                                </form>
                             </td>
                         </tr>{% else %}<tr>
                             <td colspan="4" style="text-align:center">No registered drivers.</td>
