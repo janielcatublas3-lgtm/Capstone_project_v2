@@ -761,6 +761,16 @@
                             <option value="all">All Days</option>
                         </select>
                     </div>
+
+                    <!-- NEW TRANSACTION TYPE FILTER -->
+                    <div>
+                        <label for="reportType">Transaction Type</label>
+                        <select id="reportType">
+                            <option value="all">All Records</option>
+                            <option value="WALK-IN">Walk-in Only</option>
+                            <option value="DELIVERY">Delivery Only</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="kpi-grid" style="margin:10px 0 25px">
@@ -1310,6 +1320,7 @@
         const reportMonth = document.getElementById("reportMonth");
         const reportYear = document.getElementById("reportYear");
         const reportDay = document.getElementById("reportDay");
+        const reportType = document.getElementById("reportType");
 
         function updateAvailableDays() {
             const month = Number(reportMonth.value);
@@ -1344,6 +1355,7 @@
             const month = Number(reportMonth.value);
             const year = Number(reportYear.value);
             const selected = reportDay.value;
+            const selectedType = reportType.value;
 
             const count = new Date(year, month + 1, 0).getDate();
 
@@ -1371,16 +1383,21 @@
                     return;
                 }
 
-                const daily = days[d - 1];
-
                 const type = (record.dataset.type || "DELIVERY").trim().toUpperCase();
                 const status = (record.dataset.status || "").trim().toLowerCase();
-                const customer = record.dataset.customer || "Unknown";
 
-                // Only completed deliveries are included in the financial report.
+                // FILTER BY TRANSACTION TYPE
+                if (selectedType !== "all" && type !== selectedType) {
+                    return;
+                }
+
+                // Only completed deliveries are included
                 if (type === "DELIVERY" && !["done", "completed"].includes(status)) {
                     return;
                 }
+
+                const daily = days[d - 1];
+                const customer = record.dataset.customer || "Unknown";
 
                 daily.transactions++;
                 daily.types.add(type);
@@ -1394,7 +1411,6 @@
                 if (type === "WALK-IN") {
                     daily.walkIns++;
                     daily.income += Number(record.dataset.income) || 0;
-                    // Walk-in expenses are zero.
                 } else {
                     daily.deliveries++;
                     daily.income += Number(record.dataset.income) || 0;
@@ -1461,10 +1477,9 @@
 
                 // CUSTOMER NAMES
                 const customerCell = document.createElement("td");
-                customerCell.textContent =
-                    daily.customers.length
-                        ? daily.customers.join(", ")
-                        : "—";
+                customerCell.textContent = daily.customers.length
+                    ? daily.customers.join(", ")
+                    : "—";
 
                 row.appendChild(customerCell);
 
@@ -1497,38 +1512,30 @@
             const profitTotal = incomeTotal - expenseTotal;
 
             // REPORT TITLE
+            let typeTitle = "All Records";
+
+            if (selectedType === "WALK-IN") {
+                typeTitle = "Walk-in Records";
+            } else if (selectedType === "DELIVERY") {
+                typeTitle = "Delivery Records";
+            }
+
             document.getElementById("reportBreakdownTitle").textContent =
-                selected === "all"
-                    ? "Daily Breakdown"
-                    : "Report for Day " + selected;
+                (selected === "all" ? "Daily Breakdown" : "Report for Day " + selected)
+                + " - " + typeTitle;
 
             // KPI TOTALS
-            document.getElementById("monthlyIncome").textContent =
-                money(incomeTotal);
-
-            document.getElementById("monthlyExpenses").textContent =
-                money(expenseTotal);
-
-            document.getElementById("monthlyProfit").textContent =
-                money(profitTotal);
-
-            document.getElementById("monthlyTransactions").textContent =
-                transactionTotal;
+            document.getElementById("monthlyIncome").textContent = money(incomeTotal);
+            document.getElementById("monthlyExpenses").textContent = money(expenseTotal);
+            document.getElementById("monthlyProfit").textContent = money(profitTotal);
+            document.getElementById("monthlyTransactions").textContent = transactionTotal;
 
             // TABLE FOOTER TOTALS
-            document.getElementById("reportTotalTransactions").textContent =
-                transactionTotal;
-
-            document.getElementById("reportTotalIncome").textContent =
-                money(incomeTotal);
-
-            document.getElementById("reportTotalExpenses").textContent =
-                money(expenseTotal);
-
-            document.getElementById("reportTotalProfit").textContent =
-                money(profitTotal);
+            document.getElementById("reportTotalTransactions").textContent = transactionTotal;
+            document.getElementById("reportTotalIncome").textContent = money(incomeTotal);
+            document.getElementById("reportTotalExpenses").textContent = money(expenseTotal);
+            document.getElementById("reportTotalProfit").textContent = money(profitTotal);
         }
-
         function initializeMonthlyReport() {
             const years = new Set([new Date().getFullYear()]);
 
@@ -1557,6 +1564,7 @@
         reportMonth.addEventListener("change", updateAvailableDays);
         reportYear.addEventListener("change", updateAvailableDays);
         reportDay.addEventListener("change", updateMonthlyReport);
+        reportType.addEventListener("change", updateMonthlyReport);
 
         initializeMonthlyReport();
 
