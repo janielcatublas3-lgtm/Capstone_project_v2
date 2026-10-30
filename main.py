@@ -242,55 +242,103 @@ def admin_dashboard():
         customer["total_income"] = round(customer["total_income"], 2)
         customer["total_profit"] = round(customer["total_profit"], 2)
 
-    # Existing delivery-only financial analytics
+ 
+    # =========================================================
+    # DELIVERY FINANCIAL ANALYTICS
+    # Uses scheduled delivery_date for all date-based reports
+    # =========================================================
+
     today = datetime.now(timezone.utc).date()
-    daily = weekly = monthly = 0.0
-    total_income = total_fuel = 0.0
+
+    daily = 0.0
+    weekly = 0.0
+    monthly = 0.0
+    total_income = 0.0
+    total_fuel = 0.0
+
     analytics = {}
     monthly_analytics = {}
 
     for item in history:
         try:
-            date_str = item.get("date")
+            # Use scheduled delivery date, not completion date
+            date_str = item.get("delivery_date")
+
             if not date_str:
                 continue
 
-            delivery_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            delivery_date = datetime.strptime(
+                date_str, "%Y-%m-%d"
+            ).date()
+
             income = safe_float(item.get("total_price", 0))
             fuel = safe_float(item.get("fuel_cost", 0))
-            profit = safe_float(item.get("profit", 0))
+            profit = safe_float(item.get("profit", income - fuel))
 
-            month_key = delivery_date.strftime("%Y-%m")
-            monthly_analytics[month_key] = monthly_analytics.get(month_key, 0) + profit
-
+            # Overall totals for completed deliveries
             total_income += income
             total_fuel += fuel
 
+            # Daily profit based on scheduled delivery date
             if delivery_date == today:
                 daily += profit
 
+            # Weekly profit based on scheduled delivery date
             if delivery_date.isocalendar()[:2] == today.isocalendar()[:2]:
                 weekly += profit
 
-            if delivery_date.year == today.year and delivery_date.month == today.month:
+            # Monthly profit based on scheduled delivery date
+            if (
+                delivery_date.year == today.year
+                and delivery_date.month == today.month
+            ):
                 monthly += profit
 
-            chart_day = delivery_date.strftime("%b %d")
-            analytics[chart_day] = analytics.get(chart_day, 0) + profit
-        except Exception as e:
-            print("Analytics error:", e)
+            # Group profit by scheduled delivery month
+            month_key = delivery_date.strftime("%Y-%m")
 
+            monthly_analytics[month_key] = (
+                monthly_analytics.get(month_key, 0.0) + profit
+            )
+
+            # Chart data grouped by scheduled delivery day
+            chart_day = delivery_date.strftime("%b %d")
+
+            analytics[chart_day] = (
+                analytics.get(chart_day, 0.0) + profit
+            )
+
+        except (ValueError, TypeError) as e:
+            print("Analytics date error:", e)
+
+    # Chart values
     chart_labels = list(analytics.keys())
     chart_values = list(analytics.values())
 
+    # Peak Month and Lowest Month
     if monthly_analytics:
-        peak_key = max(monthly_analytics, key=monthly_analytics.get)
-        lowest_key = min(monthly_analytics, key=monthly_analytics.get)
-        peak_month = datetime.strptime(peak_key, "%Y-%m").strftime("%B %Y")
-        lowest_month = datetime.strptime(lowest_key, "%Y-%m").strftime("%B %Y")
+        peak_key = max(
+            monthly_analytics,
+            key=monthly_analytics.get
+        )
+
+        lowest_key = min(
+            monthly_analytics,
+            key=monthly_analytics.get
+        )
+
+        peak_month = datetime.strptime(
+            peak_key, "%Y-%m"
+        ).strftime("%B %Y")
+
+        lowest_month = datetime.strptime(
+            lowest_key, "%Y-%m"
+        ).strftime("%B %Y")
+
     else:
         peak_month = "No Data"
         lowest_month = "No Data"
+
 
     return render_template(
         "admin_dashboard.html",
