@@ -886,6 +886,10 @@
                     <label>Customer Name</label>
                     <input type="text" name="customer_name" placeholder="Enter customer name" required>
 
+                    <!-- TRANSACTION DATE -->
+                    <label for="walkin_date">Transaction Date</label>
+                    <input type="date" id="walkin_date" name="date" value="{{ today }}" max="{{ today }}" required>
+
                     <div class="form-grid">
                         <div>
                             <label>Water Quantity (Tons)</label>
@@ -900,7 +904,7 @@
                     </div>
 
                     <p class="muted" style="margin-bottom:12px">
-                        Transaction number and date are generated automatically.
+                        Select the actual date when the customer purchased the water.
                         No expenses are recorded for walk-in sales.
                     </p>
 

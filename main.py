@@ -363,7 +363,8 @@ def admin_dashboard():
         peak_month=peak_month,
         lowest_month=lowest_month,
         walk_in_customers=walk_in_customers,
-        walk_in_sales=walk_in_sales
+        walk_in_sales=walk_in_sales,
+        today=datetime.now().strftime("%Y-%m-%d"),
     )
 
 
@@ -374,25 +375,53 @@ def admin_dashboard():
 @app.route("/add_walk_in_sale", methods=["POST"])
 @login_required
 def add_walk_in_sale():
+
     customer_name = bleach.clean(
         request.form.get("customer_name", "").strip()
     )
     customer_name = " ".join(customer_name.split())
+
     tons = safe_float(request.form.get("tons"))
     price = safe_float(request.form.get("price"))
 
     if not customer_name:
         return "Customer name is required.", 400
+
     if tons <= 0 or price < 0:
         return "Enter a valid water quantity and price.", 400
 
+    # Current transaction creation time
     now = datetime.now(timezone.utc)
+
+    # Get the actual purchase date selected by the admin
+    transaction_date = request.form.get("date", "").strip()
+
+    # Use today's date if no date was provided
+    if not transaction_date:
+        transaction_date = now.strftime("%Y-%m-%d")
+
+    # Validate the selected date
+    try:
+        selected_date = datetime.strptime(
+            transaction_date, "%Y-%m-%d"
+        ).date()
+    except ValueError:
+        return "Invalid transaction date.", 400
+
+    if selected_date > now.date():
+        return "Transaction date cannot be in the future.", 400
+
+    # Generate transaction details
     transaction_id = str(uuid.uuid4())
+
     transaction_no = (
-        f"WI-{now.strftime('%Y%m%d')}-{uuid.uuid4().hex[:6].upper()}"
+        f"WI-{transaction_date.replace('-', '')}-"
+        f"{uuid.uuid4().hex[:6].upper()}"
     )
+
     total_income = round(tons * price, 2)
 
+    # Save walk-in transaction to Firestore
     db.collection("walk_in_sales").document(transaction_id).set({
         "transaction_no": transaction_no,
         "customer_name": customer_name,
@@ -401,133 +430,15 @@ def add_walk_in_sale():
         "price_per_ton": price,
         "total_income": total_income,
         "profit": total_income,
-        "date": now.strftime("%Y-%m-%d"),
+
+        # Actual purchase date selected by the admin
+        "date": transaction_date,
+
+        # Actual time the transaction was recorded
         "created_at": now
     })
 
     return redirect(url_for("admin_dashboard"))
-
-
-# =========================================================
-# ADD DRIVER
-# =========================================================
-
-@app.route("/add_driver", methods=["POST"])
-@login_required
-def add_driver():
-    driver_id = str(uuid.uuid4())
-    qr_url = f"{BASE_URL}/register/{driver_id}"
-
-    qr = qrcode.make(qr_url)
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
-
-    db.collection("drivers").document(driver_id).set({
-        "name": request.form.get("name"),
-        "address": request.form.get("address"),
-        "contact": request.form.get("contact"),
-        "registered": False,
-        "username": "",
-        "password": "",
-        "qr_url": qr_url,
-        "qr_image": qr_base64,
-        "created_at": datetime.now(timezone.utc)
-    })
-
-    return f"""
-    <!DOCTYPE html>
-    <html><head><title>Driver Created</title></head>
-    <body>
-        <h2>Driver Created</h2>
-        <img src="data:image/png;base64,{qr_base64}" width="250">
-        <p>Scan this QR code using the driver's phone.</p>
-        <p><strong>Registration URL:</strong><br>{qr_url}</p>
-        <a href="/admin_dashboard">Back to Dashboard</a>
-    </body></html>
-    """
-
-
-# =========================================================
-# DELETE DRIVER
-# =========================================================
-
-@app.route("/delete_driver", methods=["POST"])
-@login_required
-def delete_driver():
-    driver_id = request.form.get("driver_id")
-    if not driver_id:
-        return redirect(url_for("admin_dashboard"))
-
-    try:
-        driver_ref = db.collection("drivers").document(driver_id)
-        driver_doc = driver_ref.get()
-        if not driver_doc.exists:
-            return redirect(url_for("admin_dashboard"))
-
-        driver_ref.delete()
-
-        assignments = (
-            db.collection("assignments")
-            .where("driver_id", "==", driver_id)
-            .stream()
-        )
-        for assignment in assignments:
-            status = assignment.to_dict().get("status")
-            if status in ["pending", "accepted", "declined"]:
-                assignment.reference.delete()
-
-        print(f"Driver {driver_id} deleted successfully.")
-    except Exception as e:
-        print("DELETE DRIVER ERROR:", e)
-
-    return redirect(url_for("admin_dashboard"))
-
-
-# =========================================================
-# DRIVER REGISTRATION
-# =========================================================
-
-@app.route("/register/<driver_id>", methods=["GET", "POST"])
-def register(driver_id):
-    driver_ref = db.collection("drivers").document(driver_id)
-    driver = driver_ref.get()
-
-    if not driver.exists:
-        return "Invalid QR Code", 404
-
-    data = driver.to_dict()
-
-    if request.method == "GET":
-        if data.get("registered"):
-            return redirect("/driver_login")
-        return render_template(
-            "register.html",
-            driver_name=data.get("name"),
-            driver_id=driver_id
-        )
-
-    username = request.form.get("username", "").strip()
-    password = request.form.get("password", "").strip()
-    confirm = request.form.get("confirm_password", "").strip()
-
-    if not username:
-        return "Username is required."
-    if not password:
-        return "Password is required."
-    if password != confirm:
-        return "Passwords do not match."
-
-    for doc in db.collection("drivers").stream():
-        if doc.to_dict().get("username") == username:
-            return "Username already exists."
-
-    driver_ref.update({
-        "username": username,
-        "password": generate_password_hash(password),
-        "registered": True
-    })
-    return redirect("/driver_login")
 
 
 # =========================================================
