@@ -9,6 +9,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -377,6 +378,30 @@
             font-size: 13px
         }
 
+        .report-type {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap
+        }
+
+        .type-walkin {
+            background: #e3f2fd;
+            color: #1565c0
+        }
+
+        .type-delivery {
+            background: #e8f5e9;
+            color: #2e7d32
+        }
+
+        .type-both {
+            background: #fff3e0;
+            color: #e65100
+        }
+
         @media(max-width:1050px) {
             .sidebar {
                 width: 210px
@@ -472,11 +497,16 @@
 
 <body>
     <header>
-        <div class="logo"><i class="fa-solid fa-droplet"></i>
+        <div class="logo">
+            <i class="fa-solid fa-droplet"></i>
             <h2>RPV Water Delivery</h2>
         </div>
+
         <div class="admin-info">
-            <div><strong>Administrator</strong><br><small>Business Dashboard</small></div>
+            <div>
+                <strong>Administrator</strong><br>
+                <small>Business Dashboard</small>
+            </div>
             <div class="avatar">A</div>
         </div>
     </header>
@@ -499,134 +529,181 @@
                 <p>Manage deliveries and monitor business performance.</p>
             </div>
 
+            <!-- QUICK INSIGHTS -->
             <section class="card">
                 <h3><i class="fa-solid fa-lightbulb"></i> Quick Insights</h3>
                 <div class="kpi-grid">
                     <div class="kpi">
                         <div class="left">
                             <h5>Revenue</h5>
-                            <h2>₱{{ "%.2f"|format(total_income) }}</h2><small>Total income from completed
-                                deliveries.</small>
+                            <h2>₱{{ "%.2f"|format(total_income) }}</h2>
+                            <small>Total income from completed deliveries.</small>
                         </div>
                         <div class="icon blue"><i class="fa-solid fa-money-bill-trend-up"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Fuel Cost</h5>
-                            <h2>₱{{ "%.2f"|format(total_fuel) }}</h2><small>Delivery transportation expenses.</small>
+                            <h2>₱{{ "%.2f"|format(total_fuel) }}</h2>
+                            <small>Delivery transportation expenses.</small>
                         </div>
                         <div class="icon red"><i class="fa-solid fa-gas-pump"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Net Profit</h5>
-                            <h2>₱{{ "%.2f"|format(net_profit) }}</h2><small>Income after delivery fuel costs.</small>
+                            <h2>₱{{ "%.2f"|format(net_profit) }}</h2>
+                            <small>Income after delivery fuel costs.</small>
                         </div>
                         <div class="icon green"><i class="fa-solid fa-coins"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Completion Rate</h5>
-                            <h2>{% if total_deliveries %}{{ ((completed_deliveries / total_deliveries) * 100)|round(1)
-                                }}%{% else %}0%{% endif %}</h2><small>Delivery success rate.</small>
+                            <h2>
+                                {% if total_deliveries %}
+                                {{ ((completed_deliveries / total_deliveries) * 100)|round(1) }}%
+                                {% else %}
+                                0%
+                                {% endif %}
+                            </h2>
+                            <small>Delivery success rate.</small>
                         </div>
                         <div class="icon orange"><i class="fa-solid fa-chart-simple"></i></div>
                     </div>
                 </div>
             </section>
 
+            <!-- PEAK AND LOWEST MONTH -->
             <div class="kpi-grid" style="margin-bottom:25px">
                 <div class="kpi">
                     <div class="left">
                         <h5>Peak Month</h5>
-                        <h2>{{ peak_month }}</h2><small>Highest profit month.</small>
+                        <h2>{{ peak_month }}</h2>
+                        <small>Highest profit month.</small>
                     </div>
                     <div class="icon blue"><i class="fa-solid fa-arrow-trend-up"></i></div>
                 </div>
+
                 <div class="kpi">
                     <div class="left">
                         <h5>Lowest Month</h5>
-                        <h2>{{ lowest_month }}</h2><small>Lowest profit month.</small>
+                        <h2>{{ lowest_month }}</h2>
+                        <small>Lowest profit month.</small>
                     </div>
                     <div class="icon red"><i class="fa-solid fa-arrow-trend-down"></i></div>
                 </div>
             </div>
 
+            <!-- BUSINESS OVERVIEW -->
             <section class="card">
                 <h3><i class="fa-solid fa-chart-pie"></i> Business Overview</h3>
                 <div class="kpi-grid">
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Deliveries</h5>
-                            <h2>{{ total_deliveries }}</h2><small>All assigned deliveries</small>
+                            <h2>{{ total_deliveries }}</h2>
+                            <small>All assigned deliveries</small>
                         </div>
                         <div class="icon blue"><i class="fa-solid fa-truck-fast"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Completed</h5>
-                            <h2>{{ completed_deliveries }}</h2><small>Successful deliveries</small>
+                            <h2>{{ completed_deliveries }}</h2>
+                            <small>Successful deliveries</small>
                         </div>
                         <div class="icon green"><i class="fa-solid fa-circle-check"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Pending</h5>
-                            <h2>{{ pending_deliveries }}</h2><small>Waiting for driver</small>
+                            <h2>{{ pending_deliveries }}</h2>
+                            <small>Waiting for driver</small>
                         </div>
                         <div class="icon orange"><i class="fa-solid fa-clock"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Declined</h5>
-                            <h2>{{ declined_deliveries }}</h2><small>Rejected deliveries</small>
+                            <h2>{{ declined_deliveries }}</h2>
+                            <small>Rejected deliveries</small>
                         </div>
                         <div class="icon red"><i class="fa-solid fa-circle-xmark"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Drivers</h5>
-                            <h2>{{ total_drivers }}</h2><small>Registered drivers</small>
+                            <h2>{{ total_drivers }}</h2>
+                            <small>Registered drivers</small>
                         </div>
                         <div class="icon blue"><i class="fa-solid fa-users"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Customers</h5>
-                            <h2>{{ total_customers }}</h2><small>Customers on delivery records</small>
+                            <h2>{{ total_customers }}</h2>
+                            <small>Customers on delivery records</small>
                         </div>
                         <div class="icon green"><i class="fa-solid fa-user-group"></i></div>
                     </div>
                 </div>
             </section>
 
+            <!-- ASSIGN DELIVERY AND FINANCIAL SUMMARY -->
             <div class="dashboard-grid">
                 <section class="card">
                     <h3><i class="fa-solid fa-truck-fast"></i> Assign New Delivery</h3>
+
                     <form method="POST" action="/admin_dashboard">
-                        <label>Customer Name</label><input type="text" name="CustomerName"
-                            placeholder="Enter customer name" required>
-                        <label>Delivery Address</label><input type="text" name="location"
-                            placeholder="Enter complete delivery address" required>
+                        <label>Customer Name</label>
+                        <input type="text" name="CustomerName" placeholder="Enter customer name" required>
+
+                        <label>Delivery Address</label>
+                        <input type="text" name="location" placeholder="Enter complete delivery address" required>
+
                         <label>Select Driver</label>
                         <select name="driver_id" id="driverSelect" required>
-                            <option value="">Choose Driver</option>{% for d in drivers %}<option value="{{ d.id }}"
-                                data-name="{{ d.name }}">{{ d.name }}</option>{% endfor %}
+                            <option value="">Choose Driver</option>
+                            {% for d in drivers %}
+                            <option value="{{ d.id }}" data-name="{{ d.name }}">{{ d.name }}</option>
+                            {% endfor %}
                         </select>
+
                         <input type="hidden" id="driver_name" name="driver_name">
-                        <label>Delivery Date</label><input type="date" name="delivery_date" required>
+
+                        <label>Delivery Date</label>
+                        <input type="date" name="delivery_date" required>
+
                         <div class="form-grid">
-                            <div><label>Tons</label><input type="number" name="tons" min="0.01" step="0.01"
-                                    placeholder="0" required></div>
-                            <div><label>Price per Ton</label><input type="number" name="price" min="0" step="0.01"
-                                    placeholder="₱" required></div>
+                            <div>
+                                <label>Tons</label>
+                                <input type="number" name="tons" min="0.01" step="0.01" placeholder="0" required>
+                            </div>
+
+                            <div>
+                                <label>Price per Ton</label>
+                                <input type="number" name="price" min="0" step="0.01" placeholder="₱" required>
+                            </div>
                         </div>
-                        <button type="submit" style="width:100%"><i class="fa-solid fa-paper-plane"></i> Assign
-                            Delivery</button>
+
+                        <button type="submit" style="width:100%">
+                            <i class="fa-solid fa-paper-plane"></i> Assign Delivery
+                        </button>
                     </form>
                 </section>
+
                 <section class="card">
                     <h3><i class="fa-solid fa-chart-column"></i> Financial Summary</h3>
+
                     <div class="summary-grid">
                         <div class="kpi">
                             <div class="left">
@@ -635,6 +712,7 @@
                             </div>
                             <div class="icon blue"><i class="fa-solid fa-wallet"></i></div>
                         </div>
+
                         <div class="kpi">
                             <div class="left">
                                 <h5>This Week</h5>
@@ -642,6 +720,7 @@
                             </div>
                             <div class="icon green"><i class="fa-solid fa-calendar-week"></i></div>
                         </div>
+
                         <div class="kpi">
                             <div class="left">
                                 <h5>This Month</h5>
@@ -653,67 +732,97 @@
                 </section>
             </div>
 
+            <!-- MONTHLY INCOME AND EXPENSES -->
             <section class="card">
                 <h3><i class="fa-solid fa-calendar-days"></i> Monthly Income & Expenses</h3>
+
                 <div class="form-grid">
-                    <div><label for="reportMonth">Select Month</label><select id="reportMonth">{% for m in range(12) %}
-                            <option value="{{ m }}">{{
+                    <div>
+                        <label for="reportMonth">Select Month</label>
+                        <select id="reportMonth">
+                            {% for m in range(12) %}
+                            <option value="{{ m }}">
+                                {{
                                 ["January","February","March","April","May","June","July","August","September","October","November","December"][m]
-                                }}</option>{% endfor %}
-                        </select></div>
-                    <div><label for="reportYear">Select Year</label><select id="reportYear"></select></div>
-                    <div><label for="reportDay">Select Day</label><select id="reportDay">
+                                }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="reportYear">Select Year</label>
+                        <select id="reportYear"></select>
+                    </div>
+
+                    <div>
+                        <label for="reportDay">Select Day</label>
+                        <select id="reportDay">
                             <option value="all">All Days</option>
-                        </select></div>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="kpi-grid" style="margin:10px 0 25px">
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Income</h5>
-                            <h2 id="monthlyIncome">₱0.00</h2><small>Completed deliveries only</small>
+                            <h2 id="monthlyIncome">₱0.00</h2>
+                            <small>Delivery and walk-in income</small>
                         </div>
                         <div class="icon green"><i class="fa-solid fa-money-bill-wave"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Total Expenses</h5>
-                            <h2 id="monthlyExpenses">₱0.00</h2><small>Completed delivery fuel costs</small>
+                            <h2 id="monthlyExpenses">₱0.00</h2>
+                            <small>Delivery fuel expenses</small>
                         </div>
                         <div class="icon red"><i class="fa-solid fa-gas-pump"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
-                            <h5>Total Deliveries</h5>
-                            <h2 id="monthlyDeliveries">0</h2><small>Assigned deliveries</small>
+                            <h5>Total Transactions</h5>
+                            <h2 id="monthlyTransactions">0</h2>
+                            <small>Deliveries and walk-in sales</small>
                         </div>
-                        <div class="icon orange"><i class="fa-solid fa-truck-fast"></i></div>
+                        <div class="icon orange"><i class="fa-solid fa-receipt"></i></div>
                     </div>
+
                     <div class="kpi">
                         <div class="left">
                             <h5>Net Profit</h5>
-                            <h2 id="monthlyProfit">₱0.00</h2><small>Income minus fuel expenses</small>
+                            <h2 id="monthlyProfit">₱0.00</h2>
+                            <small>Income minus expenses</small>
                         </div>
                         <div class="icon blue"><i class="fa-solid fa-coins"></i></div>
                     </div>
                 </div>
+
                 <h3 id="reportBreakdownTitle">Daily Breakdown</h3>
+
                 <div class="table-wrap">
                     <table>
                         <thead>
                             <tr>
                                 <th>Date</th>
+                                <th>Type</th>
                                 <th>Customer Name(s)</th>
-                                <th>Deliveries</th>
+                                <th>Transactions</th>
                                 <th>Income</th>
                                 <th>Expenses</th>
                                 <th>Net Profit</th>
                             </tr>
                         </thead>
+
                         <tbody id="monthlyReportBody"></tbody>
+
                         <tfoot>
                             <tr style="font-weight:bold;background:#eef5fc">
-                                <td colspan="2">TOTAL</td>
-                                <td id="reportTotalDeliveries">0</td>
+                                <td colspan="3">TOTAL</td>
+                                <td id="reportTotalTransactions">0</td>
                                 <td id="reportTotalIncome">₱0.00</td>
                                 <td id="reportTotalExpenses">₱0.00</td>
                                 <td id="reportTotalProfit">₱0.00</td>
@@ -721,25 +830,45 @@
                         </tfoot>
                     </table>
                 </div>
-                <div id="monthlyReportData" hidden>{% for h in history %}<div class="report-record"
-                        data-date="{{ h.get('delivery_date', '') }}"
+
+                <!-- DELIVERY HISTORY RECORDS -->
+                <div id="monthlyReportData" hidden>
+                    {% for h in history %}
+                    <div class="report-record" data-type="DELIVERY" data-date="{{ h.get('delivery_date', '') }}"
                         data-customer="{{ h.get('Customer_Name', 'Unknown') }}"
                         data-income="{{ h.get('total_price', 0) }}" data-expense="{{ h.get('fuel_cost', 0) }}"
-                        data-status="{{ h.get('status', '') }}"></div>{% endfor %}</div>
+                        data-status="{{ h.get('status', '') }}">
+                    </div>
+                    {% endfor %}
+
+                    <!-- WALK-IN SALES RECORDS -->
+                    {% for sale in walk_in_sales %}
+                    <div class="report-record" data-type="WALK-IN" data-date="{{ sale.get('date', '') }}"
+                        data-customer="{{ sale.get('customer_name', 'Unknown') }}"
+                        data-income="{{ sale.get('total_income', 0) }}" data-expense="0" data-status="completed">
+                    </div>
+                    {% endfor %}
+                </div>
             </section>
 
+            <!-- REVENUE AND PROFIT ANALYTICS -->
             <section class="card">
                 <div class="analytics-header">
                     <div>
-                        <h3><i class="fa-solid fa-chart-line"></i> Revenue & Profit Analytics</h3><small>Business
-                            performance over time</small>
-                    </div><select id="chartType" style="width:140px;margin:0">
+                        <h3><i class="fa-solid fa-chart-line"></i> Revenue & Profit Analytics</h3>
+                        <small>Business performance over time</small>
+                    </div>
+
+                    <select id="chartType" style="width:140px;margin:0">
                         <option value="line">Line</option>
                         <option value="bar">Bar</option>
                         <option value="pie">Pie</option>
                     </select>
                 </div>
-                <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
+
+                <div class="chart-container">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
             </section>
         </main>
     </div>
@@ -749,24 +878,40 @@
         <div class="modal-content">
             <span class="close" onclick="closeWalkInModal()">&times;</span>
             <h3><i class="fa-solid fa-cash-register"></i> Walk-in Customers</h3>
+
             <div style="background:#f4f7fb;padding:20px;border-radius:14px;margin-bottom:25px">
                 <h3>Record Walk-in Transaction</h3>
+
                 <form method="POST" action="/add_walk_in_sale">
-                    <label>Customer Name</label><input type="text" name="customer_name"
-                        placeholder="Enter customer name" required>
+                    <label>Customer Name</label>
+                    <input type="text" name="customer_name" placeholder="Enter customer name" required>
+
                     <div class="form-grid">
-                        <div><label>Water Quantity (Tons)</label><input type="number" name="tons" min="0.01" step="0.01"
-                                placeholder="Enter quantity" required></div>
-                        <div><label>Price per Ton (₱)</label><input type="number" name="price" min="0" step="0.01"
-                                placeholder="Enter price" required></div>
+                        <div>
+                            <label>Water Quantity (Tons)</label>
+                            <input type="number" name="tons" min="0.01" step="0.01" placeholder="Enter quantity"
+                                required>
+                        </div>
+
+                        <div>
+                            <label>Price per Ton (₱)</label>
+                            <input type="number" name="price" min="0" step="0.01" placeholder="Enter price" required>
+                        </div>
                     </div>
-                    <p class="muted" style="margin-bottom:12px">Transaction number and date are generated automatically.
-                        No expenses are recorded for walk-in sales.</p>
-                    <button type="submit" style="width:100%"><i class="fa-solid fa-plus"></i> Save Walk-in
-                        Transaction</button>
+
+                    <p class="muted" style="margin-bottom:12px">
+                        Transaction number and date are generated automatically.
+                        No expenses are recorded for walk-in sales.
+                    </p>
+
+                    <button type="submit" style="width:100%">
+                        <i class="fa-solid fa-plus"></i> Save Walk-in Transaction
+                    </button>
                 </form>
             </div>
+
             <h3>Customer List</h3>
+
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -778,19 +923,30 @@
                             <th>Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {% for c in walk_in_customers %}
                         <tr>
                             <td>{{ c.name }}</td>
                             <td>{{ c.transaction_count }}</td>
                             <td>₱{{ "%.2f"|format(c.total_income) }}</td>
-                            <td style="color:#2E7D32;font-weight:600">₱{{ "%.2f"|format(c.total_profit) }}</td>
-                            <td><button type="button" data-customer-key="{{ c.key }}" data-customer-name="{{ c.name }}"
-                                    onclick="openWalkInCustomer(this)">View Transactions</button></td>
+                            <td style="color:#2E7D32;font-weight:600">
+                                ₱{{ "%.2f"|format(c.total_profit) }}
+                            </td>
+                            <td>
+                                <button type="button" data-customer-key="{{ c.key }}" data-customer-name="{{ c.name }}"
+                                    onclick="openWalkInCustomer(this)">
+                                    View Transactions
+                                </button>
+                            </td>
                         </tr>
-                        {% else %}<tr>
-                            <td colspan="5" style="text-align:center">No walk-in customers recorded yet.</td>
-                        </tr>{% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align:center">
+                                No walk-in customers recorded yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -801,7 +957,12 @@
     <div id="walkInCustomerModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeWalkInCustomerModal()">&times;</span>
-            <h3><i class="fa-solid fa-user"></i> Customer: <span id="walkInSelectedCustomer"></span></h3>
+
+            <h3>
+                <i class="fa-solid fa-user"></i>
+                Customer: <span id="walkInSelectedCustomer"></span>
+            </h3>
+
             <div class="kpi-grid" style="margin-bottom:25px">
                 <div class="kpi">
                     <div class="left">
@@ -810,6 +971,7 @@
                     </div>
                     <div class="icon blue"><i class="fa-solid fa-receipt"></i></div>
                 </div>
+
                 <div class="kpi">
                     <div class="left">
                         <h5>Total Income</h5>
@@ -817,6 +979,7 @@
                     </div>
                     <div class="icon green"><i class="fa-solid fa-money-bill-wave"></i></div>
                 </div>
+
                 <div class="kpi">
                     <div class="left">
                         <h5>Total Profit</h5>
@@ -825,6 +988,7 @@
                     <div class="icon blue"><i class="fa-solid fa-coins"></i></div>
                 </div>
             </div>
+
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -842,17 +1006,24 @@
             </div>
         </div>
     </div>
-    <div id="walkInTransactionData" hidden>{% for sale in walk_in_sales %}<div class="walk-in-record"
-            data-customer-key="{{ sale.customer_key }}" data-customer-name="{{ sale.customer_name }}"
-            data-transaction-no="{{ sale.transaction_no }}" data-date="{{ sale.date }}"
-            data-tons="{{ sale.water_tons }}" data-price="{{ sale.price_per_ton }}"
-            data-income="{{ sale.total_income }}" data-profit="{{ sale.profit }}"></div>{% endfor %}</div>
+
+    <!-- WALK-IN TRANSACTION DATA -->
+    <div id="walkInTransactionData" hidden>
+        {% for sale in walk_in_sales %}
+        <div class="walk-in-record" data-customer-key="{{ sale.customer_key }}"
+            data-customer-name="{{ sale.customer_name }}" data-transaction-no="{{ sale.transaction_no }}"
+            data-date="{{ sale.date }}" data-tons="{{ sale.water_tons }}" data-price="{{ sale.price_per_ton }}"
+            data-income="{{ sale.total_income }}" data-profit="{{ sale.profit }}">
+        </div>
+        {% endfor %}
+    </div>
 
     <!-- DELIVERY STATUS MODAL -->
     <div id="statusModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeStatusModal()">&times;</span>
             <h3><i class="fa-solid fa-truck-fast"></i> Delivery Status</h3>
+
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -863,15 +1034,20 @@
                             <th>Status</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {% for d in deliveries %}<tr>
+                        {% for d in deliveries %}
+                        <tr>
                             <td>{{ d.get('Customer_Name','-') }}</td>
                             <td>{{ d.get('driver_name','-') }}</td>
                             <td>{{ d.get('delivery_date','-') }}</td>
                             <td>{{ d.get('status','pending')|capitalize }}</td>
-                        </tr>{% else %}<tr>
+                        </tr>
+                        {% else %}
+                        <tr>
                             <td colspan="4">No active deliveries.</td>
-                        </tr>{% endfor %}
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -883,11 +1059,19 @@
         <div class="modal-content" style="max-width:450px">
             <span class="close" onclick="closeDriverModal()">&times;</span>
             <h3><i class="fa-solid fa-user-plus"></i> Add Driver</h3>
-            <form method="POST" action="/add_driver"><label>Full Name</label><input type="text" name="name"
-                    placeholder="Full Name" required><label>Address</label><input type="text" name="address"
-                    placeholder="Address" required><label>Contact Number</label><input type="text" name="contact"
-                    placeholder="Contact Number" required><button type="submit" style="width:100%">Register
-                    Driver</button></form>
+
+            <form method="POST" action="/add_driver">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Full Name" required>
+
+                <label>Address</label>
+                <input type="text" name="address" placeholder="Address" required>
+
+                <label>Contact Number</label>
+                <input type="text" name="contact" placeholder="Contact Number" required>
+
+                <button type="submit" style="width:100%">Register Driver</button>
+            </form>
         </div>
     </div>
 
@@ -896,6 +1080,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeDriverManagementModal()">&times;</span>
             <h3><i class="fa-solid fa-users-gear"></i> Manage Drivers</h3>
+
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -906,21 +1091,26 @@
                             <th>Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {% for d in drivers %}<tr>
+                        {% for d in drivers %}
+                        <tr>
                             <td>{{ d.get('name','-') }}</td>
                             <td>{{ d.get('address','-') }}</td>
                             <td>{{ d.get('contact','-') }}</td>
                             <td>
                                 <form method="POST" action="/delete_driver"
                                     onsubmit="return confirm('Delete this driver account? Active assignments will also be removed.');">
-                                    <input type="hidden" name="driver_id" value="{{ d.id }}"><button type="submit"
-                                        style="background:#D32F2F">Delete</button>
+                                    <input type="hidden" name="driver_id" value="{{ d.id }}">
+                                    <button type="submit" style="background:#D32F2F">Delete</button>
                                 </form>
                             </td>
-                        </tr>{% else %}<tr>
+                        </tr>
+                        {% else %}
+                        <tr>
                             <td colspan="4" style="text-align:center">No registered drivers.</td>
-                        </tr>{% endfor %}
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -932,8 +1122,10 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3><i class="fa-solid fa-clock-rotate-left"></i> Delivery History</h3>
+
             <input id="search" type="text" placeholder="Search customer, location, or driver..."
                 oninput="searchHistory()">
+
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -947,18 +1139,27 @@
                             <th>Profit</th>
                         </tr>
                     </thead>
+
                     <tbody id="historyTable">
-                        {% for h in history %}<tr>
+                        {% for h in history %}
+                        <tr>
                             <td>{{ h.get('Customer_Name','N/A') }}</td>
                             <td>{{ h.get('location','-') }}</td>
                             <td>{{ h.get('driver_name','-') }}</td>
                             <td>{{ h.get('date_assigned','-') }}</td>
                             <td>{{ h.get('delivery_date', h.get('date','-')) }}</td>
                             <td>₱{{ h.get('total_price',0) }}</td>
-                            <td style="color:#10b981;font-weight:bold">₱{{ h.get('profit',0) }}</td>
-                        </tr>{% else %}<tr>
-                            <td colspan="7" style="text-align:center">No completed delivery history.</td>
-                        </tr>{% endfor %}
+                            <td style="color:#10b981;font-weight:bold">
+                                ₱{{ h.get('profit',0) }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align:center">
+                                No completed delivery history.
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -966,51 +1167,110 @@
     </div>
 
     <script>
+        // DRIVER SELECTION
         const driverSelect = document.getElementById("driverSelect");
+
         if (driverSelect) {
             driverSelect.addEventListener("change", function () {
                 const option = this.options[this.selectedIndex];
-                document.getElementById("driver_name").value = option.getAttribute("data-name") || "";
+                document.getElementById("driver_name").value =
+                    option.getAttribute("data-name") || "";
             });
         }
-        function openModal() { document.getElementById("modal").style.display = "block" }
-        function closeModal() { document.getElementById("modal").style.display = "none" }
-        function openDriverModal() { document.getElementById("driverModal").style.display = "block" }
-        function closeDriverModal() { document.getElementById("driverModal").style.display = "none" }
-        function openDriverManagementModal() { document.getElementById("driverManagementModal").style.display = "block" }
-        function closeDriverManagementModal() { document.getElementById("driverManagementModal").style.display = "none" }
-        function openStatusModal() { document.getElementById("statusModal").style.display = "block" }
-        function closeStatusModal() { document.getElementById("statusModal").style.display = "none" }
-        function openWalkInModal() { document.getElementById("walkInModal").style.display = "block" }
-        function closeWalkInModal() { document.getElementById("walkInModal").style.display = "none" }
-        function closeWalkInCustomerModal() { document.getElementById("walkInCustomerModal").style.display = "none" }
+
+        // MODAL FUNCTIONS
+        function openModal() {
+            document.getElementById("modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function openDriverModal() {
+            document.getElementById("driverModal").style.display = "block";
+        }
+
+        function closeDriverModal() {
+            document.getElementById("driverModal").style.display = "none";
+        }
+
+        function openDriverManagementModal() {
+            document.getElementById("driverManagementModal").style.display = "block";
+        }
+
+        function closeDriverManagementModal() {
+            document.getElementById("driverManagementModal").style.display = "none";
+        }
+
+        function openStatusModal() {
+            document.getElementById("statusModal").style.display = "block";
+        }
+
+        function closeStatusModal() {
+            document.getElementById("statusModal").style.display = "none";
+        }
+
+        function openWalkInModal() {
+            document.getElementById("walkInModal").style.display = "block";
+        }
+
+        function closeWalkInModal() {
+            document.getElementById("walkInModal").style.display = "none";
+        }
+
+        function closeWalkInCustomerModal() {
+            document.getElementById("walkInCustomerModal").style.display = "none";
+        }
+
         function searchHistory() {
             const value = document.getElementById("search").value.toLowerCase();
+
             document.querySelectorAll("#historyTable tr").forEach(row => {
                 row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
             });
         }
+
+        // CLOSE MODAL WHEN CLICKING OUTSIDE
         window.addEventListener("click", event => {
-            if (event.target.classList && event.target.classList.contains("modal")) {
+            if (event.target.classList &&
+                event.target.classList.contains("modal")) {
                 event.target.style.display = "none";
             }
         });
-        function money(value) { return "₱" + Number(value || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
 
-        // Walk-in customer transaction details
+        // CURRENCY FORMAT
+        function money(value) {
+            return "₱" + Number(value || 0).toLocaleString("en-PH", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // WALK-IN CUSTOMER TRANSACTION DETAILS
         function openWalkInCustomer(button) {
             const key = button.dataset.customerKey;
             const name = button.dataset.customerName;
-            const records = Array.from(document.querySelectorAll("#walkInTransactionData .walk-in-record"))
-                .filter(record => record.dataset.customerKey === key);
+
+            const records = Array.from(
+                document.querySelectorAll("#walkInTransactionData .walk-in-record")
+            ).filter(record => record.dataset.customerKey === key);
+
             const tbody = document.getElementById("walkInTransactionBody");
             tbody.replaceChildren();
-            let incomeTotal = 0, profitTotal = 0;
+
+            let incomeTotal = 0;
+            let profitTotal = 0;
+
             records.forEach(record => {
                 const income = Number(record.dataset.income) || 0;
                 const profit = Number(record.dataset.profit) || 0;
-                incomeTotal += income; profitTotal += profit;
+
+                incomeTotal += income;
+                profitTotal += profit;
+
                 const row = document.createElement("tr");
+
                 [
                     record.dataset.transactionNo || "-",
                     record.dataset.date || "-",
@@ -1018,112 +1278,350 @@
                     money(record.dataset.price),
                     money(income),
                     money(profit)
-                ].forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell) });
+                ].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
                 row.lastElementChild.style.color = "#2E7D32";
                 row.lastElementChild.style.fontWeight = "600";
+
                 tbody.appendChild(row);
             });
+
             document.getElementById("walkInSelectedCustomer").textContent = name;
             document.getElementById("walkInTransactionCount").textContent = records.length;
             document.getElementById("walkInTotalIncome").textContent = money(incomeTotal);
             document.getElementById("walkInTotalProfit").textContent = money(profitTotal);
+
             document.getElementById("walkInCustomerModal").style.display = "block";
         }
 
-        // Monthly delivery report
+        // =====================================================
+        // MONTHLY INCOME AND EXPENSES REPORT
+        // INCLUDES DELIVERY + WALK-IN TRANSACTIONS
+        // =====================================================
+
         const reportMonth = document.getElementById("reportMonth");
         const reportYear = document.getElementById("reportYear");
         const reportDay = document.getElementById("reportDay");
 
         function updateAvailableDays() {
-            const month = Number(reportMonth.value), year = Number(reportYear.value);
+            const month = Number(reportMonth.value);
+            const year = Number(reportYear.value);
             const previous = reportDay.value || "all";
+
             const count = new Date(year, month + 1, 0).getDate();
+
             reportDay.replaceChildren();
-            const all = document.createElement("option"); all.value = "all"; all.textContent = "All Days"; reportDay.appendChild(all);
-            for (let day = 1; day <= count; day++) { const option = document.createElement("option"); option.value = day; option.textContent = "Day " + day; reportDay.appendChild(option) }
-            reportDay.value = (previous !== "all" && Number(previous) <= count) ? previous : "all";
+
+            const all = document.createElement("option");
+            all.value = "all";
+            all.textContent = "All Days";
+            reportDay.appendChild(all);
+
+            for (let day = 1; day <= count; day++) {
+                const option = document.createElement("option");
+                option.value = day;
+                option.textContent = "Day " + day;
+                reportDay.appendChild(option);
+            }
+
+            reportDay.value =
+                previous !== "all" && Number(previous) <= count
+                    ? previous
+                    : "all";
+
             updateMonthlyReport();
         }
+
         function updateMonthlyReport() {
-            const month = Number(reportMonth.value), year = Number(reportYear.value), selected = reportDay.value;
+            const month = Number(reportMonth.value);
+            const year = Number(reportYear.value);
+            const selected = reportDay.value;
+
             const count = new Date(year, month + 1, 0).getDate();
-            const days = Array.from({ length: count }, () => ({ customers: [], deliveries: 0, income: 0, expense: 0 }));
+
+            const days = Array.from({ length: count }, () => ({
+                customers: [],
+                types: new Set(),
+                transactions: 0,
+                deliveries: 0,
+                walkIns: 0,
+                income: 0,
+                expense: 0
+            }));
+
+            // READ DELIVERY AND WALK-IN RECORDS
             document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
-                const match = (record.dataset.date || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+                const match = (record.dataset.date || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
                 if (!match) return;
-                const y = Number(match[1]), m = Number(match[2]) - 1, d = Number(match[3]);
-                if (y !== year || m !== month || d < 1 || d > count) return;
-                const daily = days[d - 1], status = (record.dataset.status || "").trim().toLowerCase();
+
+                const y = Number(match[1]);
+                const m = Number(match[2]) - 1;
+                const d = Number(match[3]);
+
+                if (y !== year || m !== month || d < 1 || d > count) {
+                    return;
+                }
+
+                const daily = days[d - 1];
+
+                const type = (record.dataset.type || "DELIVERY").trim().toUpperCase();
+                const status = (record.dataset.status || "").trim().toLowerCase();
                 const customer = record.dataset.customer || "Unknown";
-                daily.deliveries++;
-                if (!daily.customers.includes(customer)) daily.customers.push(customer);
-                if (["done", "completed"].includes(status)) {
+
+                // Only completed deliveries are included in the financial report.
+                if (type === "DELIVERY" && !["done", "completed"].includes(status)) {
+                    return;
+                }
+
+                daily.transactions++;
+                daily.types.add(type);
+
+                const customerLabel = customer + " (" + type + ")";
+
+                if (!daily.customers.includes(customerLabel)) {
+                    daily.customers.push(customerLabel);
+                }
+
+                if (type === "WALK-IN") {
+                    daily.walkIns++;
+                    daily.income += Number(record.dataset.income) || 0;
+                    // Walk-in expenses are zero.
+                } else {
+                    daily.deliveries++;
                     daily.income += Number(record.dataset.income) || 0;
                     daily.expense += Number(record.dataset.expense) || 0;
                 }
             });
-            const tbody = document.getElementById("monthlyReportBody"); tbody.replaceChildren();
-            let incomeTotal = 0, expenseTotal = 0, deliveryTotal = 0;
+
+            const tbody = document.getElementById("monthlyReportBody");
+            tbody.replaceChildren();
+
+            let incomeTotal = 0;
+            let expenseTotal = 0;
+            let transactionTotal = 0;
+
             days.forEach((daily, index) => {
                 const day = index + 1;
-                if (selected !== "all" && day !== Number(selected)) return;
-                incomeTotal += daily.income; expenseTotal += daily.expense; deliveryTotal += daily.deliveries;
-                const date = String(day).padStart(2, "0") + " " + new Date(year, month, day).toLocaleString("en", { month: "short" });
+
+                if (selected !== "all" && day !== Number(selected)) {
+                    return;
+                }
+
+                incomeTotal += daily.income;
+                expenseTotal += daily.expense;
+                transactionTotal += daily.transactions;
+
+                const date =
+                    String(day).padStart(2, "0") + " " +
+                    new Date(year, month, day).toLocaleString("en", { month: "short" });
+
+                let typeLabel = "—";
+                let typeClass = "";
+
+                if (daily.types.size === 1) {
+                    typeLabel = [...daily.types][0];
+
+                    typeClass = typeLabel === "WALK-IN"
+                        ? "type-walkin"
+                        : "type-delivery";
+                } else if (daily.types.size > 1) {
+                    typeLabel = "DELIVERY + WALK-IN";
+                    typeClass = "type-both";
+                }
+
                 const row = document.createElement("tr");
-                [date, daily.customers.length ? daily.customers.join(", ") : "—", daily.deliveries, money(daily.income), money(daily.expense), money(daily.income - daily.expense)]
-                    .forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell) });
-                row.lastElementChild.style.color = daily.income - daily.expense < 0 ? "#D32F2F" : "#2E7D32";
+
+                // DATE
+                const dateCell = document.createElement("td");
+                dateCell.textContent = date;
+                row.appendChild(dateCell);
+
+                // TRANSACTION TYPE
+                const typeCell = document.createElement("td");
+
+                if (typeLabel !== "—") {
+                    const badge = document.createElement("span");
+                    badge.className = "report-type " + typeClass;
+                    badge.textContent = typeLabel;
+                    typeCell.appendChild(badge);
+                } else {
+                    typeCell.textContent = "—";
+                }
+
+                row.appendChild(typeCell);
+
+                // CUSTOMER NAMES
+                const customerCell = document.createElement("td");
+                customerCell.textContent =
+                    daily.customers.length
+                        ? daily.customers.join(", ")
+                        : "—";
+
+                row.appendChild(customerCell);
+
+                // TRANSACTIONS
+                const transactionCell = document.createElement("td");
+                transactionCell.textContent = daily.transactions;
+                row.appendChild(transactionCell);
+
+                // INCOME
+                const incomeCell = document.createElement("td");
+                incomeCell.textContent = money(daily.income);
+                row.appendChild(incomeCell);
+
+                // EXPENSES
+                const expenseCell = document.createElement("td");
+                expenseCell.textContent = money(daily.expense);
+                row.appendChild(expenseCell);
+
+                // NET PROFIT
+                const profit = daily.income - daily.expense;
+                const profitCell = document.createElement("td");
+                profitCell.textContent = money(profit);
+                profitCell.style.color = profit < 0 ? "#D32F2F" : "#2E7D32";
+                profitCell.style.fontWeight = "600";
+                row.appendChild(profitCell);
+
                 tbody.appendChild(row);
             });
-            document.getElementById("reportBreakdownTitle").textContent = selected === "all" ? "Daily Breakdown" : "Report for Day " + selected;
-            document.getElementById("monthlyIncome").textContent = money(incomeTotal);
-            document.getElementById("monthlyExpenses").textContent = money(expenseTotal);
-            document.getElementById("monthlyProfit").textContent = money(incomeTotal - expenseTotal);
-            document.getElementById("monthlyDeliveries").textContent = deliveryTotal;
-            document.getElementById("reportTotalDeliveries").textContent = deliveryTotal;
-            document.getElementById("reportTotalIncome").textContent = money(incomeTotal);
-            document.getElementById("reportTotalExpenses").textContent = money(expenseTotal);
-            document.getElementById("reportTotalProfit").textContent = money(incomeTotal - expenseTotal);
+
+            const profitTotal = incomeTotal - expenseTotal;
+
+            // REPORT TITLE
+            document.getElementById("reportBreakdownTitle").textContent =
+                selected === "all"
+                    ? "Daily Breakdown"
+                    : "Report for Day " + selected;
+
+            // KPI TOTALS
+            document.getElementById("monthlyIncome").textContent =
+                money(incomeTotal);
+
+            document.getElementById("monthlyExpenses").textContent =
+                money(expenseTotal);
+
+            document.getElementById("monthlyProfit").textContent =
+                money(profitTotal);
+
+            document.getElementById("monthlyTransactions").textContent =
+                transactionTotal;
+
+            // TABLE FOOTER TOTALS
+            document.getElementById("reportTotalTransactions").textContent =
+                transactionTotal;
+
+            document.getElementById("reportTotalIncome").textContent =
+                money(incomeTotal);
+
+            document.getElementById("reportTotalExpenses").textContent =
+                money(expenseTotal);
+
+            document.getElementById("reportTotalProfit").textContent =
+                money(profitTotal);
         }
+
         function initializeMonthlyReport() {
             const years = new Set([new Date().getFullYear()]);
+
             document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
                 const match = (record.dataset.date || "").match(/^(\d{4})-/);
-                if (match) years.add(Number(match[1]));
+
+                if (match) {
+                    years.add(Number(match[1]));
+                }
             });
+
             reportYear.replaceChildren();
-            [...years].sort((a, b) => b - a).forEach(year => { const option = document.createElement("option"); option.value = year; option.textContent = year; reportYear.appendChild(option) });
+
+            [...years].sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+                reportYear.appendChild(option);
+            });
+
             reportMonth.value = new Date().getMonth();
+
             updateAvailableDays();
         }
+
         reportMonth.addEventListener("change", updateAvailableDays);
         reportYear.addEventListener("change", updateAvailableDays);
         reportDay.addEventListener("change", updateMonthlyReport);
+
         initializeMonthlyReport();
 
-        // Chart.js analytics
+        // =====================================================
+        // CHART.JS ANALYTICS
+        // =====================================================
+
         const chartCanvas = document.getElementById("analyticsChart");
+
         const chartData = {
             labels: {{ chart_labels | tojson }},
         datasets: [{
             label: "Net Profit",
             data: {{ chart_values | tojson }},
             borderColor: "#2563eb",
-            backgroundColor: ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed", "#0891b2", "#ea580c", "#db2777"],
-            fill: true, tension: .4, borderWidth: 3
-  }]
-};
+            backgroundColor: [
+            "#2563eb",
+            "#16a34a",
+            "#f59e0b",
+            "#dc2626",
+            "#7c3aed",
+            "#0891b2",
+            "#ea580c",
+            "#db2777"
+        ],
+            fill: true,
+            tension: .4,
+            borderWidth: 3
+            }]
+        };
+
         function chartOptions(type) {
             return {
-                responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top" } },
-                scales: type === "pie" ? {} : { y: { beginAtZero: true }, x: { grid: { display: false } } }
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "top"
+                    }
+                },
+                scales: type === "pie"
+                    ? {}
+                    : {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
             };
         }
-        let analyticsChart = new Chart(chartCanvas, { type: "line", data: chartData, options: chartOptions("line") });
+
+        let analyticsChart = new Chart(chartCanvas, {
+            type: "line",
+            data: chartData,
+            options: chartOptions("line")
+        });
+
         document.getElementById("chartType").addEventListener("change", function () {
             analyticsChart.destroy();
-            analyticsChart = new Chart(chartCanvas, { type: this.value, data: chartData, options: chartOptions(this.value) });
+
+            analyticsChart = new Chart(chartCanvas, {
+                type: this.value,
+                data: chartData,
+                options: chartOptions(this.value)
+            });
         });
     </script>
 </body>
