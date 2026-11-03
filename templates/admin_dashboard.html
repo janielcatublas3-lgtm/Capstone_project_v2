@@ -493,6 +493,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1/daterangepicker.min.js"></script>
 </head>
 
 <body>
@@ -736,33 +740,18 @@
             <section class="card">
                 <h3><i class="fa-solid fa-calendar-days"></i> Monthly Income & Expenses</h3>
 
-                <div class="form-grid">
+                <div class="form-grid"
+                    style="grid-template-columns:minmax(260px, 1fr) minmax(180px, 260px); align-items:end;">
                     <div>
-                        <label for="reportMonth">Select Month</label>
-                        <select id="reportMonth">
-                            {% for m in range(12) %}
-                            <option value="{{ m }}">
-                                {{
-                                ["January","February","March","April","May","June","July","August","September","October","November","December"][m]
-                                }}
-                            </option>
-                            {% endfor %}
-                        </select>
+                        <label for="reportDateRange">Date Range</label>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="text" id="reportDateRange" readonly
+                                style="width:100%; padding:12px 14px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; cursor:pointer; font:inherit;"
+                                placeholder="Select date range">
+                            <button type="button" id="applyReportFilter"
+                                style="padding:12px 18px; border:1px solid #334155; border-radius:8px; background:#fff; font-weight:600; cursor:pointer;">Filter</button>
+                        </div>
                     </div>
-
-                    <div>
-                        <label for="reportYear">Select Year</label>
-                        <select id="reportYear"></select>
-                    </div>
-
-                    <div>
-                        <label for="reportDay">Select Day</label>
-                        <select id="reportDay">
-                            <option value="all">All Days</option>
-                        </select>
-                    </div>
-
-                    <!-- NEW TRANSACTION TYPE FILTER -->
                     <div>
                         <label for="reportType">Transaction Type</label>
                         <select id="reportType">
@@ -1313,101 +1302,49 @@
         }
 
         // =====================================================
-        // MONTHLY INCOME AND EXPENSES REPORT
-        // INCLUDES DELIVERY + WALK-IN TRANSACTIONS
+        // DATE RANGE REPORT FILTER (CALENDAR + QUICK PRESETS)
         // =====================================================
-
-        const reportMonth = document.getElementById("reportMonth");
-        const reportYear = document.getElementById("reportYear");
-        const reportDay = document.getElementById("reportDay");
+        const reportDateRange = document.getElementById("reportDateRange");
         const reportType = document.getElementById("reportType");
+        let reportStartDate = moment().startOf("day");
+        let reportEndDate = moment().endOf("day");
+        let appliedStartDate = reportStartDate.clone();
+        let appliedEndDate = reportEndDate.clone();
 
-        function updateAvailableDays() {
-            const month = Number(reportMonth.value);
-            const year = Number(reportYear.value);
-            const previous = reportDay.value || "all";
-
-            const count = new Date(year, month + 1, 0).getDate();
-
-            reportDay.replaceChildren();
-
-            const all = document.createElement("option");
-            all.value = "all";
-            all.textContent = "All Days";
-            reportDay.appendChild(all);
-
-            for (let day = 1; day <= count; day++) {
-                const option = document.createElement("option");
-                option.value = day;
-                option.textContent = "Day " + day;
-                reportDay.appendChild(option);
-            }
-
-            reportDay.value =
-                previous !== "all" && Number(previous) <= count
-                    ? previous
-                    : "all";
-
-            updateMonthlyReport();
+        function formatReportDate(date) {
+            return date.format("YYYY-MM-DD");
         }
 
         function updateMonthlyReport() {
-            const month = Number(reportMonth.value);
-            const year = Number(reportYear.value);
-            const selected = reportDay.value;
             const selectedType = reportType.value;
+            const start = appliedStartDate.clone().startOf("day");
+            const end = appliedEndDate.clone().startOf("day");
+            const days = [];
+            const dayMap = new Map();
 
-            const count = new Date(year, month + 1, 0).getDate();
+            for (let cursor = start.clone(); cursor.isSameOrBefore(end, "day"); cursor.add(1, "day")) {
+                const key = formatReportDate(cursor);
+                const daily = {
+                    date: cursor.clone(), customers: [], types: new Set(),
+                    transactions: 0, deliveries: 0, walkIns: 0, income: 0, expense: 0
+                };
+                days.push(daily);
+                dayMap.set(key, daily);
+            }
 
-            const days = Array.from({ length: count }, () => ({
-                customers: [],
-                types: new Set(),
-                transactions: 0,
-                deliveries: 0,
-                walkIns: 0,
-                income: 0,
-                expense: 0
-            }));
-
-            // READ DELIVERY AND WALK-IN RECORDS
             document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
-                const match = (record.dataset.date || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-                if (!match) return;
-
-                const y = Number(match[1]);
-                const m = Number(match[2]) - 1;
-                const d = Number(match[3]);
-
-                if (y !== year || m !== month || d < 1 || d > count) {
-                    return;
-                }
-
+                const dateValue = (record.dataset.date || "").trim();
+                if (!dayMap.has(dateValue)) return;
                 const type = (record.dataset.type || "DELIVERY").trim().toUpperCase();
                 const status = (record.dataset.status || "").trim().toLowerCase();
+                if (selectedType !== "all" && type !== selectedType) return;
+                if (type === "DELIVERY" && !["done", "completed"].includes(status)) return;
 
-                // FILTER BY TRANSACTION TYPE
-                if (selectedType !== "all" && type !== selectedType) {
-                    return;
-                }
-
-                // Only completed deliveries are included
-                if (type === "DELIVERY" && !["done", "completed"].includes(status)) {
-                    return;
-                }
-
-                const daily = days[d - 1];
-                const customer = record.dataset.customer || "Unknown";
-
+                const daily = dayMap.get(dateValue);
+                const customerLabel = (record.dataset.customer || "Unknown") + " (" + type + ")";
                 daily.transactions++;
                 daily.types.add(type);
-
-                const customerLabel = customer + " (" + type + ")";
-
-                if (!daily.customers.includes(customerLabel)) {
-                    daily.customers.push(customerLabel);
-                }
-
+                if (!daily.customers.includes(customerLabel)) daily.customers.push(customerLabel);
                 if (type === "WALK-IN") {
                     daily.walkIns++;
                     daily.income += Number(record.dataset.income) || 0;
@@ -1420,153 +1357,111 @@
 
             const tbody = document.getElementById("monthlyReportBody");
             tbody.replaceChildren();
+            let incomeTotal = 0, expenseTotal = 0, transactionTotal = 0;
 
-            let incomeTotal = 0;
-            let expenseTotal = 0;
-            let transactionTotal = 0;
-
-            days.forEach((daily, index) => {
-                const day = index + 1;
-
-                if (selected !== "all" && day !== Number(selected)) {
-                    return;
-                }
-
+            days.forEach(daily => {
                 incomeTotal += daily.income;
                 expenseTotal += daily.expense;
                 transactionTotal += daily.transactions;
-
-                const date =
-                    String(day).padStart(2, "0") + " " +
-                    new Date(year, month, day).toLocaleString("en", { month: "short" });
-
-                let typeLabel = "—";
-                let typeClass = "";
-
+                let typeLabel = "—", typeClass = "";
                 if (daily.types.size === 1) {
                     typeLabel = [...daily.types][0];
-
-                    typeClass = typeLabel === "WALK-IN"
-                        ? "type-walkin"
-                        : "type-delivery";
+                    typeClass = typeLabel === "WALK-IN" ? "type-walkin" : "type-delivery";
                 } else if (daily.types.size > 1) {
                     typeLabel = "DELIVERY + WALK-IN";
                     typeClass = "type-both";
                 }
 
                 const row = document.createElement("tr");
-
-                // DATE
                 const dateCell = document.createElement("td");
-                dateCell.textContent = date;
+                dateCell.textContent = daily.date.format("DD MMM YYYY");
                 row.appendChild(dateCell);
 
-                // TRANSACTION TYPE
                 const typeCell = document.createElement("td");
-
                 if (typeLabel !== "—") {
                     const badge = document.createElement("span");
                     badge.className = "report-type " + typeClass;
                     badge.textContent = typeLabel;
                     typeCell.appendChild(badge);
-                } else {
-                    typeCell.textContent = "—";
-                }
-
+                } else typeCell.textContent = "—";
                 row.appendChild(typeCell);
 
-                // CUSTOMER NAMES
                 const customerCell = document.createElement("td");
-                customerCell.textContent = daily.customers.length
-                    ? daily.customers.join(", ")
-                    : "—";
-
+                customerCell.textContent = daily.customers.length ? daily.customers.join(", ") : "—";
                 row.appendChild(customerCell);
 
-                // TRANSACTIONS
                 const transactionCell = document.createElement("td");
                 transactionCell.textContent = daily.transactions;
                 row.appendChild(transactionCell);
 
-                // INCOME
                 const incomeCell = document.createElement("td");
                 incomeCell.textContent = money(daily.income);
                 row.appendChild(incomeCell);
 
-                // EXPENSES
                 const expenseCell = document.createElement("td");
                 expenseCell.textContent = money(daily.expense);
                 row.appendChild(expenseCell);
 
-                // NET PROFIT
                 const profit = daily.income - daily.expense;
                 const profitCell = document.createElement("td");
                 profitCell.textContent = money(profit);
                 profitCell.style.color = profit < 0 ? "#D32F2F" : "#2E7D32";
                 profitCell.style.fontWeight = "600";
                 row.appendChild(profitCell);
-
                 tbody.appendChild(row);
             });
 
             const profitTotal = incomeTotal - expenseTotal;
-
-            // REPORT TITLE
-            let typeTitle = "All Records";
-
-            if (selectedType === "WALK-IN") {
-                typeTitle = "Walk-in Records";
-            } else if (selectedType === "DELIVERY") {
-                typeTitle = "Delivery Records";
-            }
-
+            const typeTitle = selectedType === "WALK-IN" ? "Walk-in Records" :
+                selectedType === "DELIVERY" ? "Delivery Records" : "All Records";
             document.getElementById("reportBreakdownTitle").textContent =
-                (selected === "all" ? "Daily Breakdown" : "Report for Day " + selected)
-                + " - " + typeTitle;
-
-            // KPI TOTALS
+                "Breakdown: " + start.format("MMM D, YYYY") + " to " + end.format("MMM D, YYYY") + " - " + typeTitle;
             document.getElementById("monthlyIncome").textContent = money(incomeTotal);
             document.getElementById("monthlyExpenses").textContent = money(expenseTotal);
             document.getElementById("monthlyProfit").textContent = money(profitTotal);
             document.getElementById("monthlyTransactions").textContent = transactionTotal;
-
-            // TABLE FOOTER TOTALS
             document.getElementById("reportTotalTransactions").textContent = transactionTotal;
             document.getElementById("reportTotalIncome").textContent = money(incomeTotal);
             document.getElementById("reportTotalExpenses").textContent = money(expenseTotal);
             document.getElementById("reportTotalProfit").textContent = money(profitTotal);
         }
-        function initializeMonthlyReport() {
-            const years = new Set([new Date().getFullYear()]);
 
-            document.querySelectorAll("#monthlyReportData .report-record").forEach(record => {
-                const match = (record.dataset.date || "").match(/^(\d{4})-/);
-
-                if (match) {
-                    years.add(Number(match[1]));
-                }
+        $(function () {
+            $('#reportDateRange').daterangepicker({
+                startDate: reportStartDate, endDate: reportEndDate,
+                autoUpdateInput: true, opens: 'right', drops: 'down',
+                showDropdowns: true, linkedCalendars: false, alwaysShowCalendars: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: { format: 'YYYY-MM-DD', customRangeLabel: 'Custom Range', applyLabel: 'Apply', cancelLabel: 'Cancel' }
+            }, function (start, end) {
+                reportStartDate = start.clone();
+                reportEndDate = end.clone();
             });
 
-            reportYear.replaceChildren();
-
-            [...years].sort((a, b) => b - a).forEach(year => {
-                const option = document.createElement("option");
-                option.value = year;
-                option.textContent = year;
-                reportYear.appendChild(option);
+            $('#reportDateRange').on('apply.daterangepicker', function (ev, picker) {
+                reportStartDate = picker.startDate.clone();
+                reportEndDate = picker.endDate.clone();
+                reportDateRange.value = reportStartDate.format('YYYY-MM-DD') + ' - ' + reportEndDate.format('YYYY-MM-DD');
             });
 
-            reportMonth.value = new Date().getMonth();
+            document.getElementById("applyReportFilter").addEventListener("click", function () {
+                const picker = $('#reportDateRange').data('daterangepicker');
+                appliedStartDate = picker.startDate.clone();
+                appliedEndDate = picker.endDate.clone();
+                updateMonthlyReport();
+            });
 
-            updateAvailableDays();
-        }
-
-        reportMonth.addEventListener("change", updateAvailableDays);
-        reportYear.addEventListener("change", updateAvailableDays);
-        reportDay.addEventListener("change", updateMonthlyReport);
-        reportType.addEventListener("change", updateMonthlyReport);
-
-        initializeMonthlyReport();
+            reportType.addEventListener("change", updateMonthlyReport);
+            reportDateRange.value = reportStartDate.format('YYYY-MM-DD') + ' - ' + reportEndDate.format('YYYY-MM-DD');
+            updateMonthlyReport();
+        });
 
         // =====================================================
         // CHART.JS ANALYTICS
