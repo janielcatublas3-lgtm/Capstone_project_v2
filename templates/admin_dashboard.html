@@ -492,6 +492,154 @@
                 height: 300px
             }
         }
+
+
+        /* Date range panel styled after the provided reference */
+        .date-range-panel {
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 16px;
+            max-width: 760px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        }
+
+        .date-range-panel-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 0 14px;
+            border-bottom: 1px solid #d1d5db;
+            margin-bottom: 18px;
+            color: #334155;
+            font-size: 15px;
+        }
+
+        .date-range-panel-heading i {
+            color: #3b82f6;
+        }
+
+        .date-range-panel-heading strong {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .date-range-fieldset,
+        .date-range-inputs fieldset {
+            min-width: 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 12px 12px;
+            background: #fff;
+        }
+
+        .date-range-fieldset {
+            margin-bottom: 18px;
+        }
+
+        .date-range-fieldset legend,
+        .date-range-inputs legend {
+            padding: 0 5px;
+            margin-left: 2px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .date-range-fieldset select {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            padding: 5px 2px;
+            color: #334155;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .date-range-inputs {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        .date-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-input-wrap input {
+            min-width: 0;
+            flex: 1;
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #334155;
+            font: inherit;
+            padding: 5px 0;
+        }
+
+        .date-input-wrap i {
+            color: #64748b;
+            font-size: 18px;
+        }
+
+        .date-range-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .date-range-actions span {
+            display: block;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .date-range-actions small {
+            display: block;
+            color: #94a3b8;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .date-range-actions button {
+            border: 0;
+            border-radius: 6px;
+            background: #1677c8;
+            color: #fff;
+            padding: 10px 18px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .date-range-actions button:hover {
+            background: #0f5fa5;
+        }
+
+        @media (max-width: 600px) {
+            .date-range-inputs {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .date-range-panel-heading {
+                flex-wrap: wrap;
+            }
+
+            .date-range-panel-heading strong {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -740,18 +888,56 @@
             <section class="card">
                 <h3><i class="fa-solid fa-calendar-days"></i> Monthly Income & Expenses</h3>
 
-                <div class="form-grid"
-                    style="grid-template-columns:minmax(260px, 1fr) minmax(180px, 260px); align-items:end;">
-                    <div>
-                        <label for="reportDateRange">Date Range</label>
-                        <div style="display:flex; gap:8px; align-items:center;">
-                            <input type="text" id="reportDateRange" readonly
-                                style="width:100%; padding:12px 14px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; cursor:pointer; font:inherit;"
-                                placeholder="Select date range">
-                            <button type="button" id="applyReportFilter"
-                                style="padding:12px 18px; border:1px solid #334155; border-radius:8px; background:#fff; font-weight:600; cursor:pointer;">Filter</button>
-                        </div>
+                <div class="date-range-panel">
+                    <div class="date-range-panel-heading">
+                        <i class="fa-solid fa-chevron-down"></i>
+                        <span>Select dates</span>
+                        <strong id="selectedDateRangeLabel">Last 28 days</strong>
                     </div>
+
+                    <fieldset class="date-range-fieldset">
+                        <legend>Date range:</legend>
+                        <select id="reportDatePreset" aria-label="Date range preset">
+                            <option value="custom">Custom date range</option>
+                            <option value="last7">Last 7 days</option>
+                            <option value="last28" selected>Last 28 days</option>
+                            <option value="last90">Last 90 days</option>
+                            <option value="thisWeek">This week</option>
+                            <option value="thisMonth">This month</option>
+                            <option value="thisYear">This year</option>
+                            <option value="lastWeek">Last week</option>
+                            <option value="lastMonth">Last month</option>
+                        </select>
+                    </fieldset>
+
+                    <div class="date-range-inputs">
+                        <fieldset>
+                            <legend>Start:</legend>
+                            <div class="date-input-wrap">
+                                <input type="date" id="reportStartDate" aria-label="Start date">
+                                <i class="fa-regular fa-calendar-days"></i>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>End:</legend>
+                            <div class="date-input-wrap">
+                                <input type="date" id="reportEndDate" aria-label="End date">
+                                <i class="fa-regular fa-calendar-days"></i>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="date-range-actions">
+                        <div>
+                            <span id="dateRangeSummary"></span>
+                            <small>Dates are shown in your local time</small>
+                        </div>
+                        <button type="button" id="applyReportDateRange">Update</button>
+                    </div>
+                </div>
+
+                <div class="form-grid"
+                    style="grid-template-columns:minmax(180px, 260px); align-items:end; margin-top:14px;">
                     <div>
                         <label for="reportType">Transaction Type</label>
                         <select id="reportType">
@@ -1306,7 +1492,8 @@
         // =====================================================
         const reportDateRange = document.getElementById("reportDateRange");
         const reportType = document.getElementById("reportType");
-        let reportStartDate = moment().startOf("day");
+        // Default view: Last 28 days, inclusive (like the reference calendar).
+        let reportStartDate = moment().subtract(27, "days").startOf("day");
         let reportEndDate = moment().endOf("day");
         let appliedStartDate = reportStartDate.clone();
         let appliedEndDate = reportEndDate.clone();
@@ -1426,42 +1613,96 @@
             document.getElementById("reportTotalProfit").textContent = money(profitTotal);
         }
 
-        $(function () {
-            $('#reportDateRange').daterangepicker({
-                startDate: reportStartDate, endDate: reportEndDate,
-                autoUpdateInput: true, opens: 'right', drops: 'down',
-                showDropdowns: true, linkedCalendars: false, alwaysShowCalendars: true,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
-                locale: { format: 'YYYY-MM-DD', customRangeLabel: 'Custom Range', applyLabel: 'Apply', cancelLabel: 'Cancel' }
-            }, function (start, end) {
-                reportStartDate = start.clone();
-                reportEndDate = end.clone();
-            });
+        const reportStartDateInput = document.getElementById("reportStartDate");
+        const reportEndDateInput = document.getElementById("reportEndDate");
+        const reportDatePreset = document.getElementById("reportDatePreset");
+        const selectedDateRangeLabel = document.getElementById("selectedDateRangeLabel");
+        const dateRangeSummary = document.getElementById("dateRangeSummary");
 
-            $('#reportDateRange').on('apply.daterangepicker', function (ev, picker) {
-                reportStartDate = picker.startDate.clone();
-                reportEndDate = picker.endDate.clone();
-                reportDateRange.value = reportStartDate.format('YYYY-MM-DD') + ' - ' + reportEndDate.format('YYYY-MM-DD');
-            });
+        function momentDateInput(date) {
+            return date.format("YYYY-MM-DD");
+        }
 
-            document.getElementById("applyReportFilter").addEventListener("click", function () {
-                const picker = $('#reportDateRange').data('daterangepicker');
-                appliedStartDate = picker.startDate.clone();
-                appliedEndDate = picker.endDate.clone();
-                updateMonthlyReport();
-            });
+        function updateDateRangeSummary() {
+            const start = moment(reportStartDateInput.value, "YYYY-MM-DD", true);
+            const end = moment(reportEndDateInput.value, "YYYY-MM-DD", true);
+            if (!start.isValid() || !end.isValid()) {
+                dateRangeSummary.textContent = "Choose a start and end date";
+                selectedDateRangeLabel.textContent = "Custom date range";
+                return;
+            }
+            dateRangeSummary.textContent = start.format("MMM D, YYYY") + " to " + end.format("MMM D, YYYY");
+            selectedDateRangeLabel.textContent = reportDatePreset.options[reportDatePreset.selectedIndex].text;
+        }
 
-            reportType.addEventListener("change", updateMonthlyReport);
-            reportDateRange.value = reportStartDate.format('YYYY-MM-DD') + ' - ' + reportEndDate.format('YYYY-MM-DD');
+        function getPresetDates(preset) {
+            const today = moment().startOf("day");
+            switch (preset) {
+                case "last7": return [today.clone().subtract(6, "days"), today.clone()];
+                case "last28": return [today.clone().subtract(27, "days"), today.clone()];
+                case "last90": return [today.clone().subtract(89, "days"), today.clone()];
+                case "thisWeek": return [today.clone().startOf("week"), today.clone()];
+                case "thisMonth": return [today.clone().startOf("month"), today.clone()];
+                case "thisYear": return [today.clone().startOf("year"), today.clone()];
+                case "lastWeek": return [today.clone().subtract(1, "week").startOf("week"), today.clone().subtract(1, "week").endOf("week")];
+                case "lastMonth": return [today.clone().subtract(1, "month").startOf("month"), today.clone().subtract(1, "month").endOf("month")];
+                default: return null;
+            }
+        }
+
+        reportDatePreset.addEventListener("change", function () {
+            const dates = getPresetDates(this.value);
+            if (dates) {
+                reportStartDateInput.value = momentDateInput(dates[0]);
+                reportEndDateInput.value = momentDateInput(dates[1]);
+                updateDateRangeSummary();
+            } else {
+                selectedDateRangeLabel.textContent = "Custom date range";
+            }
+        });
+
+        [reportStartDateInput, reportEndDateInput].forEach(input => {
+            input.addEventListener("change", function () {
+                reportDatePreset.value = "custom";
+                updateDateRangeSummary();
+            });
+        });
+
+        document.getElementById("applyReportDateRange").addEventListener("click", function () {
+            const start = moment(reportStartDateInput.value, "YYYY-MM-DD", true);
+            const end = moment(reportEndDateInput.value, "YYYY-MM-DD", true);
+
+            if (!start.isValid() || !end.isValid()) {
+                alert("Please select both a valid start date and end date.");
+                return;
+            }
+            if (start.isAfter(end, "day")) {
+                alert("Start date cannot be after the end date.");
+                return;
+            }
+
+            appliedStartDate = start.clone().startOf("day");
+            appliedEndDate = end.clone().endOf("day");
+            reportStartDate = appliedStartDate.clone();
+            reportEndDate = appliedEndDate.clone();
+            updateDateRangeSummary();
             updateMonthlyReport();
         });
+
+        reportType.addEventListener("change", updateMonthlyReport);
+
+        // Default selection is Last 28 days, as shown in the reference.
+        const defaultDates = getPresetDates("last28");
+        reportStartDateInput.value = momentDateInput(defaultDates[0]);
+        reportEndDateInput.value = momentDateInput(defaultDates[1]);
+        appliedStartDate = defaultDates[0].clone().startOf("day");
+        appliedEndDate = defaultDates[1].clone().endOf("day");
+        reportStartDate = appliedStartDate.clone();
+        reportEndDate = appliedEndDate.clone();
+        updateDateRangeSummary();
+        updateMonthlyReport();
+
+        // =====================================================
 
         // =====================================================
         // CHART.JS ANALYTICS
