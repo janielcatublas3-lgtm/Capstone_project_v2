@@ -1547,6 +1547,9 @@
             let incomeTotal = 0, expenseTotal = 0, transactionTotal = 0;
 
             days.forEach(daily => {
+                // Hide dates that have no matching delivery or walk-in transactions.
+                if (daily.transactions === 0) return;
+
                 incomeTotal += daily.income;
                 expenseTotal += daily.expense;
                 transactionTotal += daily.transactions;
